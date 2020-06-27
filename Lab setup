@@ -1,0 +1,5 @@
+So here we are going to mention all the steps related to lab setup of chef.
+1) lets install latest version of chef DK from "downloads.chef.io/chefdk" on out local machine first. note that qwe will
+    be using this local machine chefdk later in a course.
+2) Now you need to follow the pdf file present at the same location on gitHub named as "chefdk_installation_on_windows
+    to install chefdk, git and editor and then perform some test to ensure that chefdk is successfuly installed.
