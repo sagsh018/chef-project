@@ -1,0 +1,18 @@
+Corse Roadmap
+First half of the course
+1) Understanding configuration management
+2) Using chef resources
+3) building chef cookbooks
+4) understanding chef client and convergence.
+5) gathering system details with ohai
+6) Templates and other common chef resources 
+7) Using chef development kit 
+Second half of the course
+1) What is chef server
+2) community code and chef supermarket
+3) building custom cookbooks
+4) managing multiple nodes.
+5) Roles and the runlists.
+6) Indexing and search on chef server
+7) Managing cookbook version with environments
+8) Databags.
