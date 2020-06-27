@@ -1,0 +1,44 @@
+So here we are going to setup vagrant setup to create our lab.
+You can go ahead with the document present at same location on gitHub repo with the name "vbox_&_vagrant_installation.pdf"
+to install virtual box and vagrant using chocolatey installer.
+once the installation is done, check the version of the tools using below commands
+1) vboxmanage --version // To check virtual box version
+2) vagrant --version // To check vagrant version
+Also add vagrant and vboxmanage in youe system variable path using below commands
+Virtual box
+============
+PS> $path = [Environment]::GetEnvironmentVariable(“PATH”, “Machine”)
+PS> $vbox_path = “C:\Program Files\Oracle\VirtualBox”
+PS> [Environment]::SetEnvironmentVariable(“PATH”, “$path;$vbox_path”, “Machine”)
+
+vagrant
+=======
+PS> $path = [Environment]::GetEnvironmentVariable(“PATH”, “Machine”)
+PS> $vagrant_path = “C:\HashiCorp\Vagrant\bin”
+PS> [Environment]::SetEnvironmentVariable(“PATH”, “$path;$vagrant_path”, “Machine”)
+
+OR 
+
+You can open system variable path in windows and add the path manually.
+
+Now once this setup is done, we can now go agead and spin uo our virtual machines using "Vagrantfile" present in
+same location on gitHub repo. This will spin up 3 VM's with chef project "bento/centos-7.2"
+The "vagrantfile" will spin up the complete environment, but to lear below are the command to follow to spin up environmwnt 
+step by step.
+
+1) move into the chef directory under projects
+2) # vagrant box add bento/centos-7.2 --provider=virtualbox
+    This will provide us with basic centos 7.2 box to manage.
+3) # vagrant init bento/centos-7.2
+    This will initiate a process and create a "vagrantfile" which we were talking above and initiate a centos machine.
+4) It is this vagrantfile which is used by vagrnat user to manage our boxes and it is written in Ruby.
+5) once this is done we can launch our box using this Vagrantfile wherever we want, provided this vagrantfile,
+    shoudl be present in that perticular directory.
+6) so once this Vagrantfile present in perticular directory, we can use below command to bring up the vertual machines
+    # vagrnat up
+7) Then you can login to a vagrant VM using "vagrant ssh <VM name>"
+8) once you are logged in we can then install chef DK in that local VM for first part of our course using below command
+    # curl https://omnitruck.chef.io/install.sh | sudo bash -s -- -P chefdk -c stable -v 0.18.30
+9) Then you install perticular editor like vim
+    # yum install vim -y
+    

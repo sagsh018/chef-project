@@ -5,6 +5,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "chefserver" do |chefserver|
     chefserver.vm.box = "bento/centos-7.2"
     chefserver.vm.network "private_network", ip: "192.168.10.21"
+    chefserver.vm.network "forward_port", guest: 80, host:8080
     chefserver.vm.hostname = "chefserver"
     chefserver.vm.provider :virtualbox do |vb|
       vb.customize ["modifyvm", :id, "--memory", "4096"]
