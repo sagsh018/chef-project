@@ -1,0 +1,27 @@
+1) server configuration management is refered to a process of managing the integrity of a state of a computer system.
+2) Automation or IT orchestration is at the hear of configuration management 
+3) Configuration management describes configuration that should be implemented accross single or multiple servers and 
+    enforce that state.
+4) Main purpose of configuration management solutions is to ensure that state of a sysem matches to whats defined in 
+    configuration management scripts.
+5) for example we are trying to deploy new web application server, and accomplishing this task manually is going to 
+    take let say 4 hours or so.
+6) But if automate the provisioning of this new web application, it can be done in few minutes using configuration
+    management solution .
+7) Now supose something goes wron with your new web server and it goes offline for some reason. Now auditing the system 
+    could take hours to find out what went wrong. and in the meantime suppose we want to deploy a replacement to bring 
+    your services back online 
+8) Note that recovering from disaster is much more feseable when we automate the provisioning task of bringing the 
+    system back into desired state.
+9) Now suppose while drilling down to what went wrong with your web application, you might want to implement a quick fix.
+10) but suppose you have already applied patches to that server, then its difficult to find out what changes have occured   
+    to the system, as the patches/changes were applied manually to the system.
+11) but configuration management scripts document the instructions for updating or provisioning the machine. So that 
+    your new machine won't stray from the desired state and you could launch new one on a fly.
+12) Also note that with this style of configuration management solutions, version control systems like git keep track 
+    of changes to you configuration management scripts. and provide revision as your web application scale or grow.
+13) This approch is called as Infrastructure as Code (IaC). this makes infra as verisonable, testable and repeatable.
+14) Also note that this approce helps in replicating the same configuration to a new system easily and quickly.
+15) it allows you to develop the staging environment, where changes to your application can be pushed for development 
+    and acceptance build and to verify the changes before they are deployed.
+

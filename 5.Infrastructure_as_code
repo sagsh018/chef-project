@@ -1,0 +1,11 @@
+1) Chef describes infrastructure as code. IAC means writing code to manage configurations and automate provisioning of
+    infrastrucure in addition to deployments.
+2) In this course we are going to learn three differnet parts of Chef
+    a) Chef DK-- Chef development kit, which is going to write scripts/code to automate your infrastructure and 
+        test yhem locally as well with the help of integration testing, etc. and then finally upload the code to    
+        chef server
+    b) node -- it is a physical of virtual machine which is managed by chef, "chef-client" euns on each server and
+        securely communicate with chef server. chef-client follow the instructions which we give in a form of recipies
+        or for now lets call the code books, to bring the node into the desired state.
+    c) chef-server -- this is going to act as a central artifact repo for all the information in code which we use to 
+        provision these infrastructure nodes.
