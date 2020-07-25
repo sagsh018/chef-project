@@ -1,0 +1,51 @@
+1) So for the time being we are going to write chef code or cookbooks on our workstation machine and run them locally
+2) In this case we are using our base machine/windoes machine as a Chef workstation we have installed it from chef 
+    downloads from below URL
+    https://downloads.chef.io/products/workstation/stable?v=20.7.96&os=windows
+3) Also we have git bash installed and enabled in VScode to have terminal in here
+4) we can check the current version of chef using below command
+    chef --version
+5) So we are going to create our firt recipe named as "hello.rb" under our chef project directory
+    /c/Users/Sagar/projects/chef/hello.rb
+    
+    #file 'C:\Users\Sagar\projects\chef\hello.txt' do
+    #    content 'Hello World..!!'
+    #end
+
+    Note:: Here in our recipe we have to mention the resource path as per windows standard, because we know that 
+    ultimately this recipe is going to run on windows machine as of now.
+
+    So this is our first recipe written in ruby code and what this does is that we are populating one file named as 
+    hello.txt preent in mentioned location in the above ruby script recipe with the message "Hello World..!!"
+    Now once this file is saved, we will give this file to chef client running locally to execute this file.
+    Now here chef-client will be executing this recipe locally on workstation itself and not on the node using chef server.
+    So we will be unsing below chef-client command to run the script locally on the workstation and create a hello.txt
+    file for us with the content we have mentionedioned in the recipe.
+
+    # sudo chef-client --local-mode hello.rb
+    Note that above command of chef-client contain option named as "--local-mode" this is to specify chef-client to 
+    run the provided recipe on the workstaion itself and do not communicate with chef server for this.
+    So just hit enter on above command see chef creating file hello.txt.
+    
+6) outout of chef-client
+    a) output shows that 1 resource is converged and resource here means file hello.txt. note that chef client tells that
+        file C:\Users\Sagar\projects\chef\hello.txt which does not exist is created first and the updated with the content
+        which we have mentioned in the recipe.
+        action:create for file here is a defualt action for file resource, hence even when we haven't mentioned the 
+        create action, chef client has created the file first.
+7) Now to verify that whether the file created, we can check manually by checking the location.
+
+How Chef thinks about system components
+=======================================
+1) Idempotency -- It says that do not edit or modify anything related to recourse if the resource is already in the
+    desired state.
+    for example if the package is already installed then no need to attempt to install it. it will be skipped.
+    similarly if the service is already running no need to start or restart the server untill specified 
+2) Ohai -- This is nothing but contains the information about the system cores. like networking information
+    hardware information, etc. This can be use to create generic scripts for all the servers as they remain same.
+3) templates -- This is used to provide more flexibility when managing configuration files. for example, many times
+    config files might need ip address of the host server. so rather that writing separate config file for each server
+    a template allows us to write generic code with login in it what might produce the config file. in chef we are 
+    going to make use of embedded ruby as a templating system.
+4) Extensions through 3rd party -- This is a final feature of chef configuration management system. with this chef
+    provide chef super market, knife plugins. ruby gems.
