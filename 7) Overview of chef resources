@@ -1,0 +1,62 @@
+1) Chef resources are fundamental building block while working with chef.
+2) Resources are going to describe the smallest piece that we can configure in a system
+3) So this is a point where we are going to actually start interacting with chef using Ruby (DSL) in order to configure 
+    these small piece of resources.
+Exploring System resources
+==========================
+1) Chef resource is going to be some system component that we are going to take action on
+2) We are going to take this resource and change its state on the system. for example, Files, services, packages, etc.
+
+What is resources
+==================
+1) A resource is a statement of configuration policy.
+2) It describes the desired state of an element of your infrastructure and the steps needed to bring   that item to the
+    desired state.
+3) Every resource has two components:
+    a) Type - refers to what piece of system we are configuring like: file service or package
+    b) desired state -- desired state of the resources, ex: specific version of package, service running or stopped.
+4) Now lets consider the example of the recipe we have created and understand from that the definition of resource
+    # file 'C:\Users\Sagar\projects\chef\hello.txt' do
+    #   content 'Hello World..!! I am back again'
+    # end
+    So here 
+    a) Type: This refers to "file" type resource. So we are going to deal with file resource here
+    b) Name: This refers to "C:\Users\Sagar\projects\chef\hello.txt" name of the resource we are going to perform action on.
+    c) Action: This refers to the action we are going to perform on above mentioned file resource. that is :
+        create that file if it does not exist( This is default action, if no action is mentioned explicitly)
+        update the content of file with above mentioned string.
+
+Convergence and Desired state
+=============================
+1) So here we are going to talk little bit about the chef client.
+2) So the chef client is an agent that runs locally on every machine that is under management of chef.
+3) When chef-client runs, it performs all the required steps in order to bring the system into the desired state based on
+    the recipe file we give to chef-client to follow.
+4) Note that recipes are going to group resources into sets of instructions, and these resources contains the types
+    of resources and there desired state.
+5) So when chef client runs it checks these resources in the system it runs and check whether they are in desired state 
+     and if they are not there in desired state then it bring them into the desired state.
+6) The default mode of chef-client is to talk to chef server while running and get the list of recipes that it should run.
+    and this list of recipes are called as runlists
+    but for now we are going to run chef-client with --local-mode option untill we have our chef server ready.
+7) We always run chef-client as a root user so that when it tries to make modifications to the system resources, it can get 
+    that authorities.
+8) So till now we ran the chef-client as below
+    sudo chef-client --local-mode hello.rb 
+    So what this does is, it made sure that the file resource which is mentioned in the recipe does exist in the system
+    and if it is not present then it will create that. Also made sure and updated the content of the file as mentioned
+    in the recipe.
+9) Now suppose we modify the content of this file "hello.txt", placed at the same location of our working directory
+    ==> /c/Users/Sagar/projects/chef
+10) Now suppose we have modified the content of the file hello.txt and made it different from  that mentioned in the 
+    recipe. in short we have changed the desired state of the resource,
+    notice that chef is not going to take the action immediately, as you change the content of the file.
+    its going to wait to have chef-client run.
+    and when chef-client runs, its going to modify the state of a system and bring it back to the desired state.
+11) Now supposw we make some more modification with the file resource we are working with.
+    Suppose we have changed the permissions to the file and the ownership of the file and again rain the chef-client.
+    We will notice that this tie chef client is not going to make any changes. The reason behind this is we haven't
+    mentioned any policy for permissions and ownership in the recipe yet.
+
+
+We will start with workstation setup excersise next time.

@@ -28,8 +28,8 @@
         "foreground_application_boost": 2,
         "install_date": "20181213210736.000000+330",
         "large_system_cache": null,
-        "last_boot_up_time": "20200725151321.787963+330",
-        "local_date_time": "20200725195650.216000+330",
+        "last_boot_up_time": "20200810052553.023953+330",
+        "local_date_time": "20200810152514.822000+330",
         "locale": "0409",
         "manufacturer": "Microsoft Corporation",
         "max_number_of_processes": -1,
@@ -39,7 +39,7 @@
         ],
         "name": "Microsoft Windows 7 Home Basic |C:\\Windows|\\Device\\Harddisk0\\Partition2",
         "number_of_licensed_users": 0,
-        "number_of_processes": 140,
+        "number_of_processes": 123,
         "number_of_users": 2,
         "operating_system_sku": 2,
         "organization": "",
@@ -149,17 +149,17 @@
     "memory": {
       "swap": {
         "total": "8260972kB",
-        "free": "8054624kB"
+        "free": "7836012kB"
       },
       "total": "8260972kB",
-      "free": "4053848kB"
+      "free": "4386100kB"
     },
     "network": {
       "interfaces": {
         "0xd": {
           "configuration": {
             "ip_address": [
-              "192.168.1.6",
+              "192.168.1.4",
               "fe80::114b:37f9:19f0:ec69"
             ],
             "arp_always_source_route": null,
@@ -175,8 +175,8 @@
             "default_ttl": null,
             "description": "Intel(R) Centrino(R) Wireless-N 2230",
             "dhcp_enabled": true,
-            "dhcp_lease_expires": "20200726155821.000000+330",
-            "dhcp_lease_obtained": "20200725155821.000000+330",
+            "dhcp_lease_expires": "20200811140852.000000+330",
+            "dhcp_lease_obtained": "20200810140852.000000+330",
             "dhcp_server": "192.168.1.1",
             "dns_domain": null,
             "dns_domain_suffix_search_order": [
@@ -280,13 +280,13 @@
             "status": null,
             "status_info": null,
             "system_name": "SAGAR-PC",
-            "time_of_last_reset": "20200725151321.787963+330"
+            "time_of_last_reset": "20200810052553.023953+330"
           },
           "counters": {
 
           },
           "addresses": {
-            "192.168.1.6": {
+            "192.168.1.4": {
               "prefixlen": "24",
               "netmask": "255.255.255.0",
               "broadcast": "192.168.1.255",
@@ -430,7 +430,7 @@
             "status": null,
             "status_info": null,
             "system_name": "SAGAR-PC",
-            "time_of_last_reset": "20200725151321.787963+330"
+            "time_of_last_reset": "20200810052553.023953+330"
           },
           "counters": {
 
@@ -578,7 +578,7 @@
             "status": null,
             "status_info": null,
             "system_name": "SAGAR-PC",
-            "time_of_last_reset": "20200725151321.787963+330"
+            "time_of_last_reset": "20200810052553.023953+330"
           },
           "counters": {
 
@@ -726,7 +726,7 @@
             "status": null,
             "status_info": null,
             "system_name": "SAGAR-PC",
-            "time_of_last_reset": "20200725151321.787963+330"
+            "time_of_last_reset": "20200810052553.023953+330"
           },
           "counters": {
 
@@ -874,7 +874,7 @@
             "status": null,
             "status_info": null,
             "system_name": "SAGAR-PC",
-            "time_of_last_reset": "20200725151321.787963+330"
+            "time_of_last_reset": "20200810052553.023953+330"
           },
           "counters": {
 
@@ -898,8 +898,155 @@
           "mtu": null,
           "type": "Ethernet 802.3",
           "arp": {
-            "192.168.80.156": "00:0c:29:78:5d:7a",
             "192.168.80.255": "ff:ff:ff:ff:ff:ff",
+            "224.0.0.22": "01:00:5e:00:00:16",
+            "224.0.0.251": "01:00:5e:00:00:fb",
+            "224.0.0.252": "01:00:5e:00:00:fc",
+            "239.255.255.250": "01:00:5e:7f:ff:fa"
+          },
+          "encapsulation": "Ethernet"
+        },
+        "0x1f": {
+          "configuration": {
+            "ip_address": [
+              "192.168.99.1",
+              "fe80::cd46:80ed:f9c4:21ec"
+            ],
+            "arp_always_source_route": null,
+            "arp_use_ether_snap": null,
+            "caption": "[00000033] VirtualBox Host-Only Ethernet Adapter",
+            "database_path": "%SystemRoot%\\System32\\drivers\\etc",
+            "dead_gw_detect_enabled": null,
+            "default_ip_gateway": null,
+            "default_tos": null,
+            "default_ttl": null,
+            "description": "VirtualBox Host-Only Ethernet Adapter #3",
+            "dhcp_enabled": false,
+            "dhcp_lease_expires": null,
+            "dhcp_lease_obtained": null,
+            "dhcp_server": null,
+            "dns_domain": null,
+            "dns_domain_suffix_search_order": [
+
+            ],
+            "dns_enabled_for_wins_resolution": false,
+            "dns_host_name": "Sagar-PC",
+            "dns_server_search_order": null,
+            "domain_dns_registration_enabled": false,
+            "forward_buffer_memory": null,
+            "full_dns_registration_enabled": true,
+            "gateway_cost_metric": null,
+            "igmp_level": null,
+            "index": 33,
+            "interface_index": 31,
+            "ip_connection_metric": 10,
+            "ip_enabled": true,
+            "ip_filter_security_enabled": false,
+            "ip_port_security_enabled": null,
+            "ip_sec_permit_ip_protocols": [
+
+            ],
+            "ip_sec_permit_tcp_ports": [
+
+            ],
+            "ip_sec_permit_udp_ports": [
+
+            ],
+            "ip_subnet": [
+              "255.255.255.0",
+              "64"
+            ],
+            "ip_use_zero_broadcast": null,
+            "ipx_address": null,
+            "ipx_enabled": null,
+            "ipx_frame_type": null,
+            "ipx_media_type": null,
+            "ipx_network_number": null,
+            "ipx_virtual_net_number": null,
+            "keep_alive_interval": null,
+            "keep_alive_time": null,
+            "mac_address": "0A:00:27:00:00:1F",
+            "mtu": null,
+            "num_forward_packets": null,
+            "pmtubh_detect_enabled": null,
+            "pmtu_discovery_enabled": null,
+            "service_name": "VBoxNetAdp",
+            "setting_id": "{2400A747-3D51-4BD9-A43B-CB0F0C682EB7}",
+            "tcpip_netbios_options": 0,
+            "tcp_max_connect_retransmissions": null,
+            "tcp_max_data_retransmissions": null,
+            "tcp_num_connections": null,
+            "tcp_use_rfc1122_urgent_pointer": null,
+            "tcp_window_size": null,
+            "wins_enable_lm_hosts_lookup": true,
+            "wins_host_lookup_file": null,
+            "wins_primary_server": null,
+            "wins_scope_id": "",
+            "wins_secondary_server": null
+          },
+          "instance": {
+            "adapter_type": "Ethernet 802.3",
+            "adapter_type_id": 0,
+            "auto_sense": null,
+            "availability": 3,
+            "caption": "[00000033] VirtualBox Host-Only Ethernet Adapter",
+            "config_manager_error_code": 0,
+            "config_manager_user_config": false,
+            "description": "VirtualBox Host-Only Ethernet Adapter",
+            "device_id": "33",
+            "error_cleared": null,
+            "error_description": null,
+            "guid": "{2400A747-3D51-4BD9-A43B-CB0F0C682EB7}",
+            "index": 33,
+            "install_date": null,
+            "installed": true,
+            "interface_index": 31,
+            "last_error_code": null,
+            "mac_address": "0A:00:27:00:00:1F",
+            "manufacturer": "Oracle Corporation",
+            "max_number_controlled": 0,
+            "max_speed": null,
+            "name": "VirtualBox Host-Only Ethernet Adapter #3",
+            "net_connection_id": "VirtualBox Host-Only Network #3",
+            "net_connection_status": 2,
+            "net_enabled": true,
+            "network_addresses": null,
+            "permanent_address": null,
+            "physical_adapter": true,
+            "pnp_device_id": "ROOT\\NET\\0002",
+            "power_management_capabilities": null,
+            "power_management_supported": false,
+            "product_name": "VirtualBox Host-Only Ethernet Adapter",
+            "service_name": "VBoxNetAdp",
+            "speed": "1000000000",
+            "status": null,
+            "status_info": null,
+            "system_name": "SAGAR-PC",
+            "time_of_last_reset": "20200810052553.023953+330"
+          },
+          "counters": {
+
+          },
+          "addresses": {
+            "192.168.99.1": {
+              "prefixlen": "24",
+              "netmask": "255.255.255.0",
+              "broadcast": "192.168.99.255",
+              "family": "inet"
+            },
+            "fe80::cd46:80ed:f9c4:21ec": {
+              "prefixlen": "64",
+              "family": "inet6",
+              "scope": "Link"
+            },
+            "0A:00:27:00:00:1F": {
+              "family": "lladdr"
+            }
+          },
+          "mtu": null,
+          "type": "Ethernet 802.3",
+          "arp": {
+            "192.168.99.255": "ff:ff:ff:ff:ff:ff",
             "224.0.0.22": "01:00:5e:00:00:16",
             "224.0.0.251": "01:00:5e:00:00:fb",
             "224.0.0.252": "01:00:5e:00:00:fc",
@@ -916,7 +1063,7 @@
 
       }
     },
-    "ipaddress": "192.168.1.6",
+    "ipaddress": "192.168.1.4",
     "macaddress": "68:5D:43:F9:59:D9",
     "ip6address": "fe80::114b:37f9:19f0:ec69",
     "os": "windows",
@@ -924,8 +1071,8 @@
     "platform": "windows",
     "platform_version": "6.1.7601",
     "platform_family": "windows",
-    "uptime_seconds": 17010,
-    "uptime": "4 hours 43 minutes 30 seconds",
+    "uptime_seconds": 35963,
+    "uptime": "9 hours 59 minutes 23 seconds",
     "virtualization": {
       "systems": {
 
@@ -1018,18 +1165,18 @@
     "filesystem": {
       "C:": {
         "kb_size": 145569607,
-        "kb_available": 19079057,
-        "kb_used": 126490550,
-        "percent_used": 86,
+        "kb_available": 16822128,
+        "kb_used": 128747479,
+        "percent_used": 88,
         "mount": "C:",
         "fs_type": "ntfs",
         "volume_name": ""
       },
       "D:": {
         "kb_size": 339665219,
-        "kb_available": 263946444,
-        "kb_used": 75718775,
-        "percent_used": 22,
+        "kb_available": 246668181,
+        "kb_used": 92997038,
+        "percent_used": 27,
         "mount": "D:",
         "fs_type": "ntfs",
         "volume_name": "",
@@ -1059,7 +1206,7 @@
         "enabled": false
       }
     },
-    "ohai_time": 1595687215.2166011,
+    "ohai_time": 1597053323.3543491,
     "packages": {
       "Anaconda3 2019.10 (Python 3.7.4 64-bit)": {
         "version": "2019.10",
@@ -1222,15 +1369,20 @@
         "publisher": "Microsoft Corporation",
         "installdate": "20200414"
       },
+      "Docker Toolbox version 19.03.1": {
+        "version": "19.03.1",
+        "publisher": "Docker",
+        "installdate": "20200728"
+      },
       "Microsoft Office Enterprise 2007": {
         "version": "12.0.6612.1000",
         "publisher": "Microsoft Corporation",
         "installdate": "20181229"
       },
       "Google Chrome": {
-        "version": "84.0.4147.89",
+        "version": "84.0.4147.105",
         "publisher": "Google LLC",
-        "installdate": "20200722"
+        "installdate": "20200728"
       },
       "IntelliJ IDEA Community Edition 2020.1.1": {
         "version": "201.7223.91",
@@ -1252,10 +1404,10 @@
         "version": "1.2.5033",
         "publisher": "RStudio"
       },
-      "Skype version 8.62": {
-        "version": "8.62",
+      "Skype version 8.63": {
+        "version": "8.63",
         "publisher": "Skype Technologies S.A.",
-        "installdate": "20200720"
+        "installdate": "20200805"
       },
       "TeamViewer": {
         "version": "15.1.3937",
