@@ -1,0 +1,15 @@
+1) As we have noticed few of the recipes till now and inside those recipes what we are doing is that we are grouping the 
+    resources together. where these resources are fundamental building block of configuration with chef
+2) Also we have noticed that we have given these recipe files to chef client to run on node (locally till now)
+3) These recipes are authored using DSL named as Ruby
+4) These recipes are mostly always going to be a group of resources along with the state of those resources that are 
+    desired and the actions to be take in order to bring them in desirec state
+5) Also note that our recipes not only can contain the resources, they can contain any ruby codes
+6) You can also call recipes from other recipes
+7) Notice that resources are defined top to bottom and from left to right and thats because Ruby is synchronous language 
+    So these resources are executed in exact same order in which they appear inside the recipe.
+8) Also notice that even when we give multiple runlist to chef-client to run, they run in exactly the same order we give 
+    them to chef-client. Notice these list of recipes are called as runlists. 
+9) So the important point to notice here is that chef run the recipes in the exact order we give them to chef-client and
+    also it run the resources inside those recipes in a exact same order we have written them.
+10) 

@@ -12,3 +12,7 @@ file "/etc/motd" do
     owner 'root'
     group 'root'
 end
+
+service "ntpd" do
+    action [:enable, :start]
+end
