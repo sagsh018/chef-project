@@ -1,0 +1,7 @@
+1) So here we are going to create our recipe in order to setup our workstations. we will create a recipe that will
+    a) install 2 packages -- NTP and TREE 
+    b) Managing the file /etc/motd file on a system -- and it should say message : This server is a property of Sagar
+    c) Also this file should have owner and group as root 
+2) So for above activity we are going to create a recipe named as setup and try to accomplish all the requirements written
+    above.
+3) Please check the created recipe under folder local_recipes/
