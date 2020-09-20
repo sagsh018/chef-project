@@ -84,4 +84,23 @@ cookbooks/
 
 7 directories, 13 files
 
+9) Again we can run this setup.rb recipe under the workstation cookbook as we ran it under local_recipe folder.
+    # sudo chef-client -z(this is substitute of --local-mode) cookbooks/workstation/recipes/setup.rb
+
+10) Now suppose we want to change some thing in this setup.rb file and with that we would like to change the version 
+    number as well of the cookbook. so that can be done inside metadata.rb file of a cookbook.
+    notice that inside metadata.rb file we chef uses symentic versioning that is major.minor.patch updates.
+    major changes : the changes that are not compatible with the previous softeare, that non backward compatible
+    minor changes : changes that are backward compatible and we can still use previous version cookbooks, for example
+                    adding some new functionality
+    patches: This is again backward compatible and includes like some kind of bug fix.
+11) Now suppose if we open up our setup.rb file and add some extra package to be installed with that let say git 
+    package. Now this kind of change comes under minor change as we have added some extra functionality and still
+    our cookbook will be backward compatible.
+    so with this change we will also change the version number in our metadata file from 0.1.0 to 0.2.0 and save it
+    so with this we will have two file change under git tracking system and we will have to stage and commit them as well
+12) now after saving both the files setup.rb and metadata.rb and adding them to git, we can finally run the setup.rb
+    file on workstation locally again as below
+    
+
 
