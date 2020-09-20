@@ -1,0 +1,19 @@
+1) So here we are going to see the importance of cookbooks.
+2) Cookbooks are basically used to package up our recipes, giving the version numbers and track changes to them
+3) We will also be using the cookbooks as the way to distribute our instructions to all of our various managed nodes
+4) What actually a cookbook is :
+    a) A cookbook is a fundamental unit of configuration and policy distribution
+    b) each cookbook defines a scenario, such as everthing everthing needed to install and configure MySQL, and then
+        it contain all the components that are required to support those scenarios.
+5) Cookbooks may contain    
+    a) Recipes that specify the resources to use and the order in which they are to be applied 
+    b) Attribute values
+    c) File/ Static file distributions
+    d) Templates
+    e) Extensions to chef, such as libraries, definitions and custom resources
+    f) version control
+6) Common components of cookbooks will be
+    a) README
+    b) metadata
+    c) recipes
+    d) testing directories(spec + test)

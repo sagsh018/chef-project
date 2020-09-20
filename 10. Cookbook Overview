@@ -1,0 +1,5 @@
+1) Cookbooks are actually way to group our recipes in the sets of configurations instructions.
+2) Cookbooks basically allows to describes what a set of configuraton instructions are ment to be accomplished
+3) So basically cookbooks contain groups of recipes for different purposes and any other componets require to 
+    support them
+    

@@ -1,0 +1,87 @@
+1) So here we are going to take a look at all the components inside a cookbook:
+2) So lets first go ahead and create a sample cookbook inside a directory named as "cookbooks".
+3) We will use below command in order to create the cookbooks in chef
+    # chef generate cookbook cookbooks/workstation
+    Notice that here in this perticular cookbook we are going to crate a same scerario as that of setup cookbook
+    we have created under local_recipes.
+    so this chef generate command will create the required cookbook and if we change directory to cookbooks/workstation
+    then we can see all the components of this cookbook
+4) Now after generating the cookbook we can see the entire structure of a cookbook using tree command as below
+    # tree cookbooks
+    output
+    ========
+cookbooks/
+└── workstation
+    ├── Berksfile
+    ├── chefignore
+    ├── metadata.rb
+    ├── README.md
+    ├── recipes
+    │   └── default.rb
+    ├── spec
+    │   ├── spec_helper.rb
+    │   └── unit
+    │       └── recipes
+    │           └── default_spec.rb
+    └── test
+        └── recipes
+            └── default_test.rb
+
+7 directories, 8 files
+5) So above tree command has given us the complete components pucture of the cookbook workstation
+6) Lets go one by one over some of the important components over here.
+    a) Berksfile
+        This berksfile is used to handle dependencies for our cookbook, and we will see its use when we will work 
+        with chefserver
+    b) chefignore
+        This is very similar to the .gitignore file which we use to remove some files or directory from git tracking 
+        system. So here in chefignore file is used to mention the file which we don't want to upload to the chef server
+        when uploading the cookbook to the chef server.
+    c) spec and test
+        These are the directories related to testing the cookbooks locally on the worstation. these are used to develop
+        test driven approach.
+        spec directory : This is for unit testing using common unit testing framework of ruby called as rspec. this 
+                            rspec can be used to test functionality of small pieces of our code 
+        test directory : This is used for integration tesin. This uses the framework called as test kitchen
+        Notice that these directories are uploaded to the chef server when we upload cookbook to the chefserver. and these
+        are by default added into the chefignore file.
+    d) metadata.rb file 
+        This file contain the common information like, version of the cookbook, the maintainer of the cookbook etc
+        We can also store dependencies inside the metadata file. for example one cookbook can call another cookbook
+        inside of it and these can be considered as a library. So we mention here the dependencies and we will look
+        the use of it later
+    e) README.md file
+        this is a markdown file used to have description of this cookbook.
+    f) recipes folder
+        This is the place where all our recipes are stored. and by default when we create the cookbook we get this
+        recipe named as default.rb
+7) Now lets go ahead and add our first recipe inside our cookbook under recipe folder and since we want to mirror the 
+    same concept as that of setup.rb, so we will create similar recipe to that of setup.rb inside the cookbook now
+        # chef generate recipe cookbooks/workstation setup
+        we can use this above command in order to have our cookbook created by the chef itself.
+8) again we can check with the tree command that our cookbook have been saved under recipe folder
+cookbooks/
+└── workstation
+    ├── Berksfile
+    ├── chefignore
+    ├── metadata.rb
+    ├── README.md
+    ├── recipes
+    │   ├── default.rb
+    │   └── setup.rb
+    ├── spec
+    │   ├── spec_helper.rb
+    │   └── unit
+    │       └── recipes
+    │           ├── default_spec.rb
+    │           ├── setup.rb_spec.rb
+    │           └── setup_spec.rb
+    └── test
+        └── recipes
+            ├── default_test.rb
+            ├── setup.rb
+            └── setup.rb.rb
+
+7 directories, 13 files
+
+
