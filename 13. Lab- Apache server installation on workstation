@@ -15,4 +15,5 @@
 8) also we can see the results of the web server in our browser with the help of below IP
 
     192.168.10.22:80
-    
+9) Note that syntx of any cookbook can be checked using below command
+    # chef exec ruby -c cookbooks/webserver/recipes/server.rb
