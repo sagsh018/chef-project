@@ -1,0 +1,18 @@
+1) Here we are going to create a cookbook inside cookbooks folder with the name webserver and inside this
+    cookbook we are going to create a recipe named as server.rb
+2) This recipe will have below mentioned resources:
+    a) http package 
+    b) file : /var/www/html/index.html file with the heading line of hello world
+    c) httpd service.
+3) Please see the cookbook named as webserver and its cookbook generated named as server.rb to check out the 
+    resources and there definition
+4) To generate a cookbook
+    # chef generate cookbook cookbooks/webserver
+5) now lets generate the recipe named as server.rb and this will contain all the required resources listed above.
+    # chef generate recipe cookbooks/webserver/ server
+6) Now check out the server.rb recipe file to find out the details
+7) Now once the recipe is created and saved we can run the recipe locally on the work station and see the results
+8) also we can see the results of the web server in our browser with the help of below IP
+
+    192.168.10.22:80
+    
