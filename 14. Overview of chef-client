@@ -1,0 +1,6 @@
+1) So till now we have ran the chef-client many times, locally though. 
+2) so what actually chef-client does is it runs on the node managed by the chef and check out the state of all the 
+    resources inside the recipe on the system and bring them into the desired state if they are not in the desired state
+    This process of bringing the nodes into the desired state is called as convergence
+3) So in this section we are going to learn how to pass entire cookbook instead of single recipe to the chef-client
+4) Also we will check out one new method called as include_recipe method

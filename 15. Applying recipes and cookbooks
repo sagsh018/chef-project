@@ -1,0 +1,21 @@
+1) So here we are going to see how to pass entire cookbook instead of just the single recipe to the chef-client and 
+    have it run multiple recipes
+2) Also we wil see how to run multiple cookbooks 
+3) So here we are going to make use of the below runlist syntax to select the recipe inside the webserver cookbook
+    # pwd ==> /vagrant
+    # sudo chef-client -z --runlist "webserver::server"
+    So this will check out inside my cookbooks directory and see if it could find the "server" recipe inside "webserver"
+    cookbook 
+4) Similarly we can even execute the setup recipe from the worksation cook book as below
+    # pwd ==> /vagrant
+    # sudo chef-client -z -r "workstation::setup"
+5) Now suppose if we want to execute multiple recipes all at one time from different cookbooks
+    we could do this by providing the list of recipies we need to run in that pertulcar specific order in which we
+    give to chef-client
+    see the below command
+    
+    # pwd ==> /vagrant
+    # sudo chef-client -z -r "recipe[workstation::setup],recipe[webserver::server]"
+
+    Notice here we are providing ordered runlist of recipes and they will execute in the same order as they are 
+    mentioned in above command
