@@ -9,7 +9,10 @@ end
 
 file "/var/www/html/index.html" do
     action :create
-    content "<h1>Hello World..!</h1>"
+    content "<h1>Hello World..!</h1>
+    <h2>HOSTNAME :: #{node['hostname']}</h2>
+    <h2>IPADDRESS :: #{node['ipaddress']}</h2>
+    "
 end
 
 service "httpd" do

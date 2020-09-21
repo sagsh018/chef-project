@@ -1,0 +1,9 @@
+1) So here in this lecture we are going to aply whatever we learnt from the previous lecture about the ohai in our
+    recipe called as server.rb of webserver and try to update our index.html file with the system attributes
+2) Do have a look at the server.rb file to have better understanding.
+    file "/var/www/html/index.html" do
+    action :create
+    content "<h1>Hello World..!</h1>
+    <h2>HOSTNAME :: #{node['hostname']}</h2>
+    <h2>IPADDRESS :: #{node['ipaddress']}</h2>
+    "
