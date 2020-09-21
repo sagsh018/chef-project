@@ -1,0 +1,32 @@
+1) So here we are going to take a look at how one recipe call another recipe.
+2) the include_recipe method include the resources of a recipe in a exact same order in which they occur in the recipe
+    which is included using include_recipe
+3) This include_recipe is often used whenever we want to wrap the cookbooks and hi-jack the functionality of another 
+    cookbook that might be used as a dependency. We will do this in another half of the course where our cookbook
+    will call recipes from another cookbook. but for now we can use this method to call other recipes from withen
+    our own cookbook
+4) if we notice in the tree architenture of our cookbooks we have one default.rb recipe generated with the cookbooks
+    by default. This is the recipe which is executed by default if we won't specify the name of the recipe while
+    executing chef-client and just give the cookbook name.
+5) So here we will try to include the setup.rb recipe of workstation cookbook inside the default.rb recipe of the same
+    cookbook workstation and then in the chef-client we will just pass the name of the cookbook in the runlist
+    and it will execute the default.rb recipe which inturn include the setup.rb because of include_recipe method
+6) So checkout the default.rb file of the workstation cookbook and checkout how the include_recipe method is used 
+    there:
+        include_recipe "workstation::setup.rb"
+    So this is the line we are going to add there.
+    Notice that since we are mentioning the cookbook name as well, this means that we can even include the recipe
+    from another cookbook as well, but when we want to include the recipe from another cookbook we don't create the
+    dependency of that cookbook inside this cookbook as the way above, we follow different way in that which we will
+    see later.
+7) Now we will run the chef-client without giving the name of a recipe inside it and becuase of that default.rb
+    recpe will execute and it has included setup.rb as dependency so setup.rb will execute automatically.
+    So this is the role of include_recipe and default.rb recipe.
+    # pwd ==> /vagrant
+    # sudo chef-client -z -r "recipe[workstation]"
+8) Notice that same can be done with the webserver cookbook as well, we can include server.rb inside the default.rb
+    recipe to have its dependency
+    include_recipe "webserver::server"
+9) Then we can execute it using below chef-client command
+    # pwd ==> /vagrant
+    # sudo chef-client -z -r "recipe[webserver]"
