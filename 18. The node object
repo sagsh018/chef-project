@@ -1,0 +1,79 @@
+1) So as we know that we have a apache webserver cookbook which has the configuration related to the webserver setup
+    suppose if we hae 1000 of system where this webserver need to be setup, so we can use the same cookbook to
+    deply the web server. but all these nodes will have different system attributes and we might want to be aware
+    about them before deplying the webserver on them with cookbook.
+2) For example, before deploying the webserver on all the nodes we might want to know the host specific information
+    like the ip address of the node, the hostname of the node and also want to know how fast the processer of the 
+    node, would it be able to handle the load of webserver or not, what is the amount of memory available in this
+    node.
+3) So to demostrate this scenario, lets consider the example of motd file where we have kept the message for our
+    server stating that this server is a property of sagar. But suppose if while logging into the server, we might
+    want to display some host specifuc information which makes more sense. So do this i will have to manully go to
+    the node gather that information and update that information inside the motd file 
+    for example i can gather below information as follows
+    a) host name ==> # hostname  ==> (workstation) in our case
+    b) ip address ==> # hostname -I ==> 10.0.2.15 192.168.10.22
+    c) cpu speed ==> cat /proc/cpuinfo | grep -i "cpu MHz" ==> cpu MHz : 2561.272
+    d) Total memory available to the system ==> cat /proc/meminfo | grep -i memtotal ==> MemTotal:        1016860 kB
+    
+    So once we have gathered all this information we can update this information in our setup.rb recipe of the workstation
+    and rerun the chef-client and out motd file will be updated and we will receive all the information when we login
+    to our workstation.
+    But this is a manual way. check out the setup.rb recipe how data is updated over there under the file resource.
+4) So this above way of updating the motd file is a hardcoded values method and it has lot of limitations. suppose
+    if we want to deploy the same cookbook on other system then it will have the same static values over there as well
+    which will be wrong so hardcoding the system related information as described above is not a good idea.
+    So we need to solution for this and this is where the Ohai tool comes into use.
+5) What is Ohai
+    a) Ohai is a tool that is used to collect system configuration data, which is provided to Chef Infra Client for use within cookbooks
+    b) Ohai is run by Chef Infra Client at the beginning of every Chef run to determine system state
+    c) Ohai includes many built-in plugins to detect common configuration details as well as a plugin model for writing custom plugins.
+    d) The types of attributes Ohai collects include but are not limited to:
+
+        Operating System
+        Network
+        Memory
+        Disk
+        CPU
+        Kernel
+        Host names
+        Fully qualified domain names
+        Virtualization
+        Cloud provider metadata
+    e) Attributes that are collected by Ohai are automatic level attributes, in that these attributes are used by Chef 
+        Infra Client to ensure that these attributes remain unchanged after Chef Infra Client is done configuring the node.
+    you may find details on page https://docs.chef.io/ohai/
+6) Also Ohai comes with the chef development kit and it is installed on all the system that are managed by the chef
+    infact is is required by the chef-client to run before it runs itself
+7) Ohai is a command line utility and you can run it on every node where chef-client or chefdk is installed
+    to see what all system specific attributes will be collected by the Ohai on this node.
+    # ohai
+8) so if you will notice the output of ohai command it gather buch of information about the system and return it back
+    to the chef-client in a json format
+    Now suppose if we want to checkout the ip address of the node on which it runs 
+        # ohai ipaddress
+        [
+            "10.0.2.15"
+        ]
+        # ohai hostname
+        [
+            "workstation"
+        ]
+        # ohai memory/total 
+        [
+            "1016860kB"
+        ]
+        notice that for total memory we are using / in order to get the sub property under memory.
+        # ohai cpu/0/mHz
+        [
+            "2561.272"
+        ]
+9) So the concept here is that ohai is run everytime the chef-client is run. so everytime when i try to bring our 
+    system into a desired state, with that chef-client ohai also runs and these json objects we receive and seen above
+    gets rebuilt everytime with the latest values of the system. and finally when ohai is ran all the information is
+    shoved into the object called as node object for us  and this node object will be the representation of these
+    node specific details. and we call these values that get stored in the node object after ohai run are called as
+    system attributes or node attributes.
+10) So after these attributes get stored inside the node object in the form of json format as the key:value pair, we 
+    can query and use these values in our recipes
+11) In the next lecture we will se how to use these attributes with the help of ruby string interpolation

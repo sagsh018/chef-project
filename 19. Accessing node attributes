@@ -1,0 +1,26 @@
+1) In this lecture we are going to make use of the node object to access the system attributes which got strored inside
+    the node object when ohai run everytime we run the chef-client.
+2) This node object is a globally available object, accessible to any of our recipes and any of the resources inside 
+    of it
+3) So now again have a look at the recipe setup.rb and check out the example for string interpolation in ruby as well
+    as how we have replaced the harcoded values of the motd file resource with the node object values.
+    file "/etc/motd" do
+    content "This server is resource of sagar
+        HOSTNAME : #{node['hostname']}
+        IP ADDRESS : #{node['ipaddress']}
+        CPU SPEED : #{node['cpu']['0']['mhz']}
+        Total Memory : #{node['memory']['total']}
+    "
+    So this will print values gathered by ohai when chef-client run and print them inside my motd file
+4) finally run the chef-client and the motd file will be updated with these values.
+    # pwd ==> /vagrant
+    # sudo chef-client -zr "recipe[workstation]"
+
+    and motd file content will look as below
+
+    This server is resource of sagar
+    HOSTNAME : workstation
+    IP ADDRESS : 10.0.2.15
+    CPU SPEED : 2561.272
+    Total Memory : 1016860kB
+    

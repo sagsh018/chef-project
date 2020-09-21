@@ -1,0 +1,14 @@
+1) There are some cases where you need to know the information related to the internal system properties of the 
+    noe on which you want to run your recipe or cookbook
+2) In this section we are going to talk about the Ohai, which is system descovery tool and it is used to get
+    more information about the node that actually running our code.
+3) So in this section we will talk about how Ohai run, and what its purposes, how it does the system inventory. We
+    will then talk about the node object, which actually takes this information gathered from running the system
+    inventory and makes it available to us inside our recipe.
+    We will able to get the host specific details like IP address, host name, the speed of the node running the code
+    or may be the amount of memory available to it.
+4) We will then talk about how we can access these node details inside of our recipes and have short discussion
+    about ruby string interpolation
+    atthe end of this section we will be actually access the node object inside of our own recipe and use that same 
+    information to build our index.html web page
+    
