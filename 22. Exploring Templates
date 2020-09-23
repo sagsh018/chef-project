@@ -1,0 +1,44 @@
+1) Here we are going to check out "why to use Templates"
+2) Lets discuss some of the limitations which we have came accross in writing the chef cookbooks in the way we have
+    written them so far.
+3) Lets consider the file resource:
+    a) Inside our server.rb file we tried to insert some of the node attributes inside the html tags to have our    
+        index.html created to serve our web page. But this is a very simple Hello World page. What if we have real 
+        web application
+    b) If we consider the actual web application , we can't write the entire HTML code inside the content attribute
+        of file in our recipe, because we will run into all sorts of isseu because of this for example:
+        i) "<h1 style="color: red;">Hello World</h1>"
+            now if you notice in the above statement, we have started the statement with the double quotes as thi is
+            the part of content inside the file resoure, but because of the CSS style tag we have to include another
+            double quote and which will ultimately close the opening quote of the content attribute.
+        ii) Also if try to copy the large HTML code inside the content of a fle resource then it could alos lead to
+            lot of issues, similarly if you try to clean up your recipe, due to any thing missing in the complex 
+            recipe, it could lead to the corrupted recipe
+    c) So what do we need to overcome these issues:
+        We need the ability to store the data that we would like to deploy into another file, and that file will
+        be in its native format but still allow us to insert ruby code. Specially, the node attributes we have defined.
+        Then we can tell chef to reference that file which contains my HTML code rather than pasting it into the recipe. 
+        Hence it will result into more cleaner recipe at the end.
+    d) But we have one issue in the above approach, the issue is that we try to import these node attributes into our
+        index.html file so how can i reference a static HTML file and actually insert node attributes to that static
+        index.html file which we will ask chef to reference 
+    e) So the challange here is that keep the static content of the file into a separate file in its native format,
+        but at the same time, insert node attributes and variables into this file. The solution to this is a 
+        Template resource.
+4) A Template resource is an Embedded Ruby (ERB) template that is used to generate files for us. These templates are 
+    going to be the great ways to insert ruby expressions and statements into a native file format.
+    The idea being, this will allow me to actually insert these node attributes that i have defined into a HTML file
+    which will be referenced by our recipe.
+5) So basically using the template resource will be very much like using the file resource, but instead of putting all 
+    the content of that file into the recipe i am instead going to put my native file format into an ERB file.
+    This ERB file will allow me to insert ruby expressions and statements that the compiler will resolve. The template
+    resoure will then move resulting file into the proper location on disk, after resolving the node attributes and
+    variables that we have defined 
+6) So to use the template two things you must have 
+    i) Add a template resource to our recipe. This will replace the file resource that we were using uptill now.
+    ii) An Embedded Ruby(ERB) template must be added to our cookbook. This ERB file will be mostly have HTML code in 
+        our case. However it could be any native file format
+        And once we define this ERB file, we will then insert our ruby code(node attributes in this case) into specifically
+        formatted tags called ERB tags 
+        
+    

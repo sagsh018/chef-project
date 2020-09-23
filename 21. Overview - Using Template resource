@@ -1,0 +1,11 @@
+1) So till now we have learnt about the file resource that we used to upadate the file inside the server and keep it
+    up to date.
+2) but suppose if we want to create a file of 1000 of lines then using the content attribute of file resource would
+    make the recipe grow out of size.
+3) The solution to above issue is to make use of the template resource. template resources are actually much more 
+    mature way to handle files that exist on the node.
+4) We can use templates to write configuration files, or even something like index.html files as well
+5) So here in this section we are going to discuss how to actually generate the file on the node using the template 
+    resource.
+6) We will talk about the embedded ruby with which the template files are written and also access try to access one of
+    the node attributes in one of these templating files.

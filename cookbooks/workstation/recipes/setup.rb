@@ -30,15 +30,28 @@ end
 
 # Now lets go ahead and add the required code in our file resource under content section
 
-file "/etc/motd" do
-content "This server is resource of sagar
-    HOSTNAME : #{node['hostname']}
-    IP ADDRESS : #{node['ipaddress']}
-    CPU SPEED : #{node['cpu']['0']['mhz']}
-    Total Memory : #{node['memory']['total']}
-"
-    owner "root"
-    group "root"
+# Notce that we are commenting this below file resource becuase later on in this video we will be doing this task
+# with the help of template resource, which are added below as well.
+
+# file "/etc/motd" do
+#    content "This server is resource of sagar
+#   HOSTNAME : #{node['hostname']}
+#    IP ADDRESS : #{node['ipaddress']}
+#    CPU SPEED : #{node['cpu']['0']['mhz']}
+#    Total Memory : #{node['memory']['total']}
+#"
+#    owner "root"
+#    group "root"
+# end
+
+template "/etc/motd" do
+    source 'motd.erb'
+    variables partials: {
+        'partial_name_1.txt.erb' => 'message',
+        'partial_name_2.txt.erb' => 'message',
+        'partial_name_3.txt.erb' => 'message',
+    }
+    action :create
 end
 
 service "ntpd" do
