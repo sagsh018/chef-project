@@ -1,0 +1,250 @@
+Cookbook_file resource
+=======================
+1) This resource is almost same as that of the template resource, except the fact that this resource is used to source the "static content" file 
+    from the cookbook directory "files" to the specific file on the node running chef-client.
+2) Example: 
+    a) Create a new cookbook ==> apache
+    b) create a recipe named as webserver.rb and include it in the default recipe
+    c) create a files directory in this cookbook and create a static index.html file in this files directory of a cookbook
+    d) try to use this static index.html file from the files directory in your recipe webserver.rb with the help of cookbook_file resource.
+3) Notice that all the functionalities that are applied to the template resource are applicable here as well.
+4) keep in mind cookbook files are shipped with the cookbook itself, and then its a duty of chef to source these 
+    static files to the specified files(let say configuration files) on the nodes running chef-client
+4)  # chef generate cookbook cookbooks/apache
+    # chef generate file cookbooks/apache/ index.html
+        <!DOCTYPE html>
+        <html>
+
+        <head>
+            <meta charset=" utf-8 ">
+            <title>Web Server Main Page</title>
+        </head>
+
+        <body>
+            <h1>Hello Team..!</h1>
+            <h2>This is a static web page running on apache web server</h2>
+            <h2>This static html page is created using cookbook_file chef resource</h2>
+        </body>
+
+        </html>
+    # chef generate recipe cookbooks/apache/ webserver
+        cookbook_file "Web Page" do
+            source "index.html"
+            path "/var/www/html/index.html"
+            action :create
+        end
+    # sudo chef-client --local-mode -r "recipe[apache]"
+5) So these above steps are going to update the content of the index.html file on the node eunning the chef-client
+    with the static content in the index.html file under the files directory with the help of cookbook_file
+    resource.
+
+
+
+
+
+remote_file resource
+====================
+1) remote_file resource is used whenever you want to download some file off of a remote server
+2) rest all the things are very similar to the file and cookbook_file resource
+3) Example  
+    a) In our webserver cookbook, we will be using the remote_file resource in our server.rb to download the image from facebook
+    b) we are going to save the image file under the directory "/var/www/html" right beside my index.html file
+    c) and then i am going to update my template index.html.erb file to include this image in my web page
+4) Perform the below steps
+    a) Add below remote_file resource and its content just above the template resource in the server.rb recipe
+        remote_file "My FB image" do
+            source "https://scontent.fdel33-1.fna.fbcdn.net/v/t1.0-9/52961230_2102800463100481_5485985113277726720_n.jpg?_nc_cat=108&_nc_sid=85a577&_nc_ohc=rE2LPLIuf3wAX9tjy-F&_nc_ht=scontent.fdel33-1.fna&oh=7fc551da51dcd213cff3757708dc52b8&oe=5FB20654"
+            path "/var/www/html/my_image.png"
+        end
+    b) refer this downloaded remote image file in the index.html.erb template file in order to include this to our web page
+        <!DOCTYPE html>          
+        <html>
+        <head>
+            <meta charset=" utf-8 ">
+            <title>Web Server Main Page</title>
+        </head>
+        <body>
+            <img src="my_image.png" srcset="my_image.png 2x">
+            <h1>Hello <%= @name %>..!</h1>
+            <h2>Hostname :: <%= node['hostname'] %> </h2>
+            <h2>IP Address :: <%= node['ipaddress'] %> </h2>
+        </body>
+        </html>
+        and then this template will be refered inside the template resource of our recipe file server.rb
+    c) # sudo chef-client --local-mode -r "recipe[webserver]"
+
+
+
+
+
+execute resource
+================
+1) This resource is used to execute single command or block of command using <<-EOH  ... EOH block, inside the recipe
+2) So first we are going to make use of the bash resource which also does the same task of executing the bash commands.
+3) have a look at the server.rb recipe file in the webserver cookbook to understand the usage of bash resource. Also notice that bash resource
+    by default is not idempotent in nature, that means chef will not be able to check the statement of system and then apply the command, which
+    you will specify inside the bash resource. and to take care of that we will have to make use of the guards like "not_if" and "only_if"
+    server.rb
+    ===========
+    bash "inline script" do
+        user "root"    # To specify who can run below code (root in this case)
+        code "mkdir -p /var/www/mysites && chown -R apache /var/www/mysites" 
+        # not_if "[ -d /var/www/mysites/ ]"
+        not_if do
+            File.directory?("/var/www/mysites")
+        end
+    end
+    So if you notice in the above code, we have to use the guards in order to maintain idempotency of chef here becasue by default bash resource
+    does is not idempotent in nature.
+    Here we are trying to create a separate directory to host our own web pages other than /var/www/html folder.
+    disadvantage with bash resource
+    ===============================
+    This is only going to run in the bash shell and not anywhere else. So to overcome that we are making use of the execute resource which is 
+    going to provide the advantage of executing the commands across multiple platform and not platform dependant. So chef will take care of 
+    identifying the interpreter here itself.
+    So now instead of having above bash resource code we could have below execute resource code
+    server.rb
+    =========
+    execute "run a script" do
+        user "root"
+        command <<-EOH
+            mkdir -p /var/www/mysites/
+            chown -R apache /var/www/mysites
+        EOH
+        not_if do
+            File.directory?("/var/www/mysites")
+        end
+    end
+    So lets just run it and see what happens.
+    # sudo chef-client --local-mode -r "recipe[webserver]"
+    This has created the directory in he node running the chef-client as it was not present before.
+            drwxr-xr-x. 2 apache root 6 Oct 17 09:36 /var/www/mysites/
+4) We could also give the script name to be exeuted inside the execute resource see the :
+    a) Suppose we have created the script to create another directory under /var/www/html/othersites/ to keep my other sites inside the html
+        directory. So lets create the script let say under the directory /vagrant 
+        create_dir.sh
+        =============
+        #!/bin/bash
+
+        mkdir -p /var/www/html/othersites/
+        chown -R apache /var/www/html/othersites/
+
+        Then you can refer this in the execute resource inside the recipe server.rb
+        server.rb
+        ===========
+        execute "run script" do
+            user "root"
+            command <<-EOH
+                cd /vagrant
+                ./create_dir.sh"
+            EOH
+        end
+        # sudo chef-client --local-mode --r "recipe[webserver]"
+        This will create below
+        drwxr-xr-x. 2 apache root 6 Oct 17 10:08 /var/www/html/othersites/
+
+5) Now to actually create these directories and all, we could use a much better approach instead of using the 
+    bash and execute resource and that is directory resource.
+    server.rb
+    =========
+    directory "creates directory" do
+        path "/var/www/html/othersites"
+        owner "apache"
+        recursive true
+        mode 755
+    end
+    Notice that with the directory resource there is no need of using the guards because directory resource is
+    follows idempotency by default.
+
+
+
+
+
+
+User and Group
+===============
+1) Here we are going to take a look at how we can make use of user and group resource in order the create the users
+    on the node running the chef-client directly.
+2) letar in the course we will also see how to create the users on any remote host that we are going to store on 
+    chef server may be in a data bag.
+3) here we are going to add user and group resource inside our workstation cookbook in the setup.rb recipe.
+    setup.rb
+    =========
+    user "user1" do
+        comment "test user 1"
+        uid 1234
+        home "/home/user1"
+        shell "/bin/bash"
+    end
+
+    group "admins" do
+        members "user1" # here we could also pass in the array of users if want to give multiple users.
+    end
+    # sudo chef-client --local-mode -r "recipe[workstation]"
+
+
+
+
+
+
+Sending and receiving notification
+====================================
+1) All the resources have ability to notify or subscribes another resource if its state changes in some way.
+2) These functionality of notifying(sending) and subscribing(listening) is common to all the resources in chef
+3) consider the example, suppose we have updated the /etc/sshd/sshd_config file with the help of template, now
+    in order to sshd service to be effected with the changes made, sshd service need to be restarted immediately.
+    So in this case we could actually perform the updation of the sshd config file and then notify another resource
+    (service in this case) to reload the sshd service.
+    Syntax
+    =======
+    a) notifies :action, "resource[name]", :timer
+    b) subscribes :action, "resource[name]", :timer
+
+    there are three types of timers:
+    :before, :delayed, :immediately
+
+    NOTIFIES
+    ========
+    So lets say we are trying to add the notifies notification inside of our setup.rb file to restart the httpd
+    service immediately as soon as we make changes to the index.html file(this is not neccessary though)
+    
+    Let say make some modification in our index.html.erb file 
+    index.html.erb
+    ===============
+    Added this line ==> <h2>This line is added to show example of notifies</h2>
+    server.rb
+    =========
+    template "WEB PAGE" do
+        source "index.html.erb"
+        path "/var/www/html/index.html"
+
+        variables (
+            { :name => "Sagar" }
+        )
+        action :create
+
+        notifies :restart, 'service[httpd]', :immediately 
+    end
+    # sudo chef-client --local-mode -r "recipe[webserver]"
+    This will show in output, as soon as the index.html file got updated because of the template updation, it 
+    notified service resource to restart the httpd service.
+
+    SUBSCRIBES 
+    ==========
+    Now we will do reverse, here we will add the subscribes(listen) notification and it is going to listen to the
+    template resource and as soon as the template .erb file changes on the server, it is going to restart the 
+    httpd service
+
+    index.html.erb
+    ==============
+    added this line ==> <h2>This line is added to show example of subscribes</h2>
+    
+    server.rb
+    =============
+    service "httpd" do
+        action [:enable, :start]
+
+        subscribes :restart, "template["/var/www/html/index.html"], :immediately
+    end
+    # sudo chef-client --local-mode -r "recipe[webserver]"
+    

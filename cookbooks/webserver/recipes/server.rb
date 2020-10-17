@@ -22,6 +22,11 @@ end
 
 =end
 
+remote_file "My FB image" do
+    source "https://scontent.fdel33-1.fna.fbcdn.net/v/t1.0-9/52961230_2102800463100481_5485985113277726720_n.jpg?_nc_cat=108&_nc_sid=85a577&_nc_ohc=rE2LPLIuf3wAX9tjy-F&_nc_ht=scontent.fdel33-1.fna&oh=7fc551da51dcd213cff3757708dc52b8&oe=5FB20654"
+    path "/var/www/html/my_image.png"
+end
+
 template "WEB PAGE" do
     source "index.html.erb"
     path "/var/www/html/index.html"
@@ -30,8 +35,52 @@ template "WEB PAGE" do
         { :name => "Sagar" }
     )
     action :create
+
+    # notifies :restart, 'service[httpd]', :immediately 
+end
+
+=begin
+bash "inline script" do
+    user "root"
+    code "mkdir -p /var/www/mysites && chown -R apache /var/www/mysites" 
+    # not_if "[ -d /var/www/mysites/ ]"  # you can use either of this way or the ruby block of do end as written below.
+    not_if do
+        File.directory?("/var/www/mysites")
+    end
+end
+=end
+
+execute "run commands" do
+    user "root"
+    command <<-EOH
+        mkdir -p /var/www/mysites/
+        chown -R apache /var/www/mysites
+    EOH
+    not_if do
+        File.directory?("/var/www/mysites")
+    end
+end
+
+execute "run script" do
+    user "root"
+    command <<-EOH
+        cd /vagrant
+        ./create_dir.sh
+    EOH
+    not_if do
+        File.directory?("/var/www/html/othersites/")
+    end
+end
+
+directory "creates directory" do
+    path "/var/www/html/othersites"
+    owner "apache"
+    recursive true
+    mode 755
 end
 
 service "httpd" do
     action [:enable, :start]
+
+    subscribes :restart, "template[/var/www/html/index.html]", :immediately
 end

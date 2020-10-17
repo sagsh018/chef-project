@@ -58,6 +58,17 @@ template "Message Of The Day" do
     action :create
 end
 
+user "user1" do
+    comment "test user 1"
+    uid 1234
+    home "/home/user1"
+    shell "/bin/bash"
+end
+
+group "admins" do
+    members "user1" # here we could also pass in the array of users if want to give multiple users.
+end
+
 service "ntpd" do
     action [:enable, :start]
 end
