@@ -33,24 +33,28 @@ end
 # Notce that we are commenting this below file resource becuase later on in this video we will be doing this task
 # with the help of template resource, which are added below as well.
 
-# file "/etc/motd" do
-#    content "This server is resource of sagar
-#   HOSTNAME : #{node['hostname']}
-#    IP ADDRESS : #{node['ipaddress']}
-#    CPU SPEED : #{node['cpu']['0']['mhz']}
-#    Total Memory : #{node['memory']['total']}
-#"
-#    owner "root"
-#    group "root"
-# end
+=begin
+file "/etc/motd" do
+    content "This server is resource of sagar
+    HOSTNAME : #{node['hostname']}
+    IP ADDRESS : #{node['ipaddress']}
+    CPU SPEED : #{node['cpu']['0']['mhz']}
+    Total Memory : #{node['memory']['total']}
+    "
+    owner "root"
+    group "root"
+end
+=end
 
-template "/etc/motd" do
-    source 'motd.erb'
-    variables partials: {
-        'partial_name_1.txt.erb' => 'message',
-        'partial_name_2.txt.erb' => 'message',
-        'partial_name_3.txt.erb' => 'message',
-    }
+template "Message Of The Day" do
+    source "motd.erb"
+    path "/etc/motd"
+    owner "root"
+    group "root"
+    mode "755"
+    variables (
+        {:name => "Sagar"}
+    )
     action :create
 end
 

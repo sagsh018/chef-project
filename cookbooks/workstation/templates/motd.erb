@@ -3,7 +3,5 @@ This server is resource of sagar
     IP ADDRESS : <%= node['ipaddress'] %>
     CPU SPEED : <%= node['cpu']['0']['mhz'] %>
     Total Memory : <%= node['memory']['total'] %>
-    <% @partials.each  do |partial, message| %>
-        Here is <%= partial %>
-        <%= render partial, :variables => {:message => message} %>
-    <% end %>
+    Name : <%= @name &>
+ 
