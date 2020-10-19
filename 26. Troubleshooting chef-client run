@@ -1,0 +1,13 @@
+1) first way of debuggin is to have unit testing and integration testing in place in order to test our chef code 
+    locally on workstation with contacting the chef server
+2) Integration testing is done with the tool called Test kitchin and unit testing is done using what is called 
+    rspec testing.
+3) We can take a help of the below chef doc page in order to understand the chef code style in ruby
+    https://docs.chef.io/ruby/
+4) We can also check the syntax of the recipe file using the below command of ruby
+    ruby -c my_cookbook_file.rb 
+    This is going to compile the recipe and see if it works or not
+5) We could use the below URL in order to have a look at the debug related stuff for the broker chef-client
+    run
+    https://docs.chef.io/debug/
+6) 
