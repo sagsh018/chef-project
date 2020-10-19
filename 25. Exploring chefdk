@@ -1,0 +1,37 @@
+1) on our chefdk, there are two types of ruby version installed,
+    a) the actual ruby installed which is installed globally and we can use it with context of chef
+        chef exec ruby --version
+        ruby 2.5.5p157 (2019-03-15 revision 67260) [x64-mingw32]
+
+        ruby --version
+        ruby 2.7.1p83 (2020-03-31 revision a0c7c23c9c) [x64-mingw32]
+    b) another version is in context of chef, this ruby is only accessible with in context with chef.
+        we say that chef uses embedded version of ruby.
+        So suppose if i want to check the syntax of a ruby file, we could do it as:
+        global ruby : ruby -c  <any ruby file>
+        embedded chef ruby : chef exec ruby -c <ruby file>
+2) we could check the chef environment variables using the 
+    # chef env
+        This tells where is the chef installed whats its path whats its gem path
+        what ruby executable it is using on workstation(our windows machine)
+    
+    # chef shell-init ==> this could be used in order to initiate the embedded ruby shell as the primary shell 
+        globally
+
+3) all these opotions and functionality comes with chef can be seen here with
+    # chef --help
+4) we could see that our chef is using the embedded version of ruby by
+    chef exec which ruby
+        /c/opscode/chefdk/embedded/bin/ruby
+
+5) We can use chef gem command in order to download the ruby gem in context of embedded ruby used by chef for 
+    downloading the ruby libraries.
+6) if you are not able to run any command try to prefix that command with chef exec and that command will start 
+    working after coming the context with embedded ruby used by chef.
+        
+7) We could also set the primary shell to the embedded ruby shell for smooth working of chef by using below command
+    # eval "$(chef shell-init SHELL_NAME)" -- To temporarily modifying the current shell to embedded ruby
+    #  echo 'eval "$(chef shell-init bash)"' >> ~/.bash_profile -- To permanently modify your shell
+        to embedded ruby shell.
+
+
