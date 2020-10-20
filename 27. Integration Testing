@@ -1,0 +1,53 @@
+1) So here we are going to learn about the integration/Inspec testing 
+2) important links
+    https://kitchen.ci/docs/getting-started/adding-test/ -- Regarding kitchen
+    https://docs.chef.io/inspec.html -- Chef inspec tests.
+    https://docs.chef.io/workstation/kitchen/ -- test kitchen
+3) So first we are trying the integration testing using the vagrant as a platform to plugin
+    .kitchen.yml file
+    ==================
+    ---
+    driver:
+        name: vagrant
+
+    provisioner:
+        name: chef_zero
+        product_name: chef
+        product_version: 13.9.4
+
+    verifier:
+        name: inspec
+
+    platforms:
+        - name: centos-7.2
+
+    suites:
+        - name: default
+        run_list:
+            - recipe[webserver::default]
+        verifier:
+            inspec_tests:
+                - test/recipes
+        attributes:
+
+    default_test.rb file
+    ======================
+    describe service('httpd') do
+        it { should be_installed }
+        it { should be_running }
+        it { should be_enabled }
+    end
+
+    describe port(80) do
+        it { should be_listening }
+    end
+
+4) with this setup we could do first :
+    a) kitchen list -- To list down the entire configuration and current stats of kitchen and last run status
+    b) kitchen create -- This will provision our VM on vagrant
+    c) kitchen converge -- This will deploy our cookbook on the VM
+    d) kitchen verify -- This will validate the tests we are going to write under webserver/test/recipe/default_test.rb
+        and this should pass the test.
+
+Trying the integration testing with Docker installed on our system 
+

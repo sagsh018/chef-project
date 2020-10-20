@@ -61,6 +61,7 @@ execute "run commands" do
     end
 end
 
+=begin --> commenting this section to to kitchen converge
 execute "run script" do
     user "root"
     command <<-EOH
@@ -71,6 +72,7 @@ execute "run script" do
         File.directory?("/var/www/html/othersites/")
     end
 end
+=end
 
 directory "creates directory" do
     path "/var/www/html/othersites"
