@@ -78,7 +78,7 @@ directory "creates directory" do
     path "/var/www/html/othersites"
     owner "apache"
     recursive true
-    mode 755
+    mode 0755
 end
 
 service "httpd" do

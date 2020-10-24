@@ -1,0 +1,15 @@
+Unit Testing OR Chefspec
+=========================
+1) Unlike of integration testing we did in previous lecture here are not insterested on actually installing the chef code on the Virtual 
+    environment and perform the tests.
+2) Here we are more interested on how the chef code has been written and see if it is written properly or not. We do this with the help of what 
+    is called resource collection 
+3) Whenever we run the chef-client, it collect all the reources and load them into memory in order to apply them on the node at the time of
+    converge.
+4) This collection of resources that are loaded into memory for convergance is called as resource collection
+5) ChefSpec is an extension of RSpec, which is nothing but a "Behaviour Driven development (BDD) framework of ruby.
+6) To run ChefSpec we run:
+    # chef exec rspec
+7) Documentation for chefspec => https://docs.chef.io/workstation/chefspec/
+8) To have a llok at how to write the tests => https://github.com/chefspec/chefspec
+We will continue this later.

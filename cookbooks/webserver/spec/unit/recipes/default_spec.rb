@@ -16,5 +16,21 @@ describe 'webserver::default' do
     it 'converges successfully' do
       expect { chef_run }.to_not raise_error
     end
+
+    it 'Install httpd package' do
+      expect (chef_run).to install_package('httpd')
+    end
+
+    it 'create the index.html file' do
+      expect (chef_run).to create_template('/var/www/html/index.html')
+    end
+
+    it 'http service started' do
+      expect (chef_run).to start_service('httpd')
+    end
+
+    it 'http service enabled' do
+      expect (chef_run).to enable_service('httpd')
+    end
   end
 end
