@@ -1,18 +1,29 @@
 ---
 driver:
-  name: docker
-  use_sudo: false
+  name: ec2
+  security_group_ids: ["sg-0090b29284df59dce"]
+  region: us-east-1
+  availability_zone: d
+  subnet_id: subnet-0d388552
+  iam_profile_name: kitchen_instance_profile
+  instance_type: t2.micro
+  associate_public_ip: true
+  interface: dns
 
 provisioner:
   name: chef_zero
+  always_update_cookbooks: true
   product_name: chef
   product_version: 13.9.4
 
-verifier:
-  name: inspec
+transport:
+  connection_timeout: 10
+  connection_retries: 5
+  username: centos
 
 platforms:
   - name: centos-7
+
 
 suites:
   - name: default

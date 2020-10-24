@@ -3,6 +3,9 @@
     https://kitchen.ci/docs/getting-started/adding-test/ -- Regarding kitchen
     https://docs.chef.io/inspec.html -- Chef inspec tests.
     https://docs.chef.io/workstation/kitchen/ -- test kitchen
+
+VAGRANT 
+=======
 3) So first we are trying the integration testing using the vagrant as a platform to plugin
     .kitchen.yml file
     ==================
@@ -49,5 +52,124 @@
     d) kitchen verify -- This will validate the tests we are going to write under webserver/test/recipe/default_test.rb
         and this should pass the test.
 
-Trying the integration testing with Docker installed on our system 
+DOCKER
+======
+
+5) Trying the integration testing with Docker installed on our system :: This one we have done with the help of 
+    Linux VM.
+    .kitchen.yml file
+    ====================
+    ---
+    driver:
+        name: docker
+        privileged: true
+        use_sudo: false
+
+    provisioner:
+        name: chef_zero
+        product_name: chef
+        product_version: 13.9.4
+        always_update_cookbooks: true
+
+    verifier:
+        name: inspec
+
+    platforms:
+        - name: centos-7
+          driver_config:
+          run_command: /usr/sbin/init
+          privileged: true
+          provision_command:
+            - systemctl enable sshd.service
+
+    suites:
+      - name: default
+        run_list:
+            - recipe[webserver::default]
+        verifier:
+            inspec_tests:
+                - test/recipes
+        attributes:
+
+    and rest of the steps remain same as that of vagrant as a driver.
+    a) kitchen list
+    b) kitchen create
+    c) kitchen converge
+    d) kitchen verify
+    e) kitchen test
+
+AMAZON EC2
+==========
+6) Now lets do the same testing with the help of AWS ec2 instance.
+    a) Download the AWS CLI v2 from the below links
+        https://awscli.amazonaws.com/AWSCLIV2.msi
+        and install it and check the version of AWS CLI with the below command 
+        # aws --version
+            aws-cli/2.0.59 Python/3.7.7 Windows/7 exe/AMD64
+    b) Then we have to create new administrator user in order to be used to access the AWS from CLI. Note never
+        use root user's access keys as it is a super user with all the permissions and can be vulnerable
+        Make use of the below doc to create new admin user
+        https://docs.aws.amazon.com/IAM/latest/UserGuide/getting-started_create-admin-group.html
+        So with the help of this above link we have created the IAM user and its details along with the Access keys
+        are save in one note on personal computer due to securities.
+    c) Then we will configure the AWS CLI as below
+        $ aws configure
+          AWS Access Key ID [None]: 
+          AWS Secret Access Key [None]:
+          Default region name [None]: 
+          Default output format [None]:
+          Then you can provide the values to these parameters one by one. and give output format as json.
+    d) Then we can create the ssh key paris from the below location
+        EC2 Dashboard >> Network & security >> Key pairs
+        and check the available key pairs as
+        $ aws ec2 describe-key-pairs --region us-east-1
+        and save the downloaded key.pem file and update the save location for this file under transport section
+        in kitchen.yml file
+    e) Then we can find out the security group ID from the below location
+        EC2 Dashboard >> Network & security >> Security Groups >> ID you will find here
+    f) Then we can find out the availability zone from the EC2 daskboard
+        EC2 Dashboard >> Scroll down to EC2 service health Dashboard
+        we have taken as : b 
+    g) Then you can find out the avialable subnets from the VPC Dashboard of the Aws console and under that you 
+        can find out the list of available subnets under subnet section. select any one of them
+    h) IAM instance profile name:  for this use below usr to to create the profile name
+        https://docs.aws.amazon.com/codedeploy/latest/userguide/getting-started-create-iam-instance-profile.html
+        IAM dashboard >> policies >> create policies >> give below JSON code in that >> review policy >>
+        give name of policy >> description of policy >> create policy >> in our case :: chef_deploy
+        policy :
+        ========
+        {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Effect": "Allow",
+                    "Action": [
+                        "ec2:*"
+                    ],
+                    "Resource": "*"
+                },
+                {
+                    "Effect": "Allow",
+                    "Action": "iam:PassRole",
+                    "Resource": "*"
+                }
+            ]
+        }
+        After this
+        IAM Dashboard >> Roles >> create roles >> select "AWS service" >> select use case as EC2 >> click on
+        permissions >> attache the policy we create just above to this role >> next , give role name and this 
+        will be your "IAM Instance profile name". in our case we have used : kitchen_instance_profile.
+    i) instance type as t2.micro:: for the first timeinvocation we have to accept the terms and subscribe
+        to the resource in the below link for centos 7
+        https://aws.amazon.com/marketplace/pp?sku=aw0evgkw8e5c1q413zgy5pjce
+    j) then in transport section set the path to make sure that create_user should have centos as the user, otherwise
+        ssh will give error to this VM
+
+    After this we can try:
+    kitchen list
+    kitchen create
+    kitchen converge
+    kitchen verify
+    kitchen login
+    kitchen destroy.
 
