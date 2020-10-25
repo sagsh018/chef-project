@@ -1,0 +1,87 @@
+1) The Chef Infra Server acts as a hub for configuration data. The Chef Infra Server stores cookbooks, 
+    the policies that are applied to nodes, and metadata that describes each registered node that is being 
+    managed by Chef Infra Client. Nodes use Chef Infra Client to ask the Chef Infra Server for configuration 
+    details, such as recipes, templates, and file distributions. 
+2)  Chef Infra Client then does as much of the configuration work as possible on the nodes themselves 
+    (and not on the Chef Infra Server).
+3) The front end of chef server is now writtne in Erlang programming language and thats why is now also called
+    Erchef.
+4) The Chef Infra Server can be configured via the /etc/opscode/chef-server.rb file. Whenever this file is 
+    modified, the chef-server-ctl reconfigure command must be run to apply the changes
+5) Now chef server is can be configured with three approaches :
+    a) Normal approache, where the cookbooks reside on the chef server itself
+    b) Approach where the cookbooks are stored externally on AWS S3
+    c) Approach where the cookbooks are stored externally on PostgreSQL database.
+6) In this course we are going to concentrate only on the approach where cookbooks are going to be kept on the 
+    chef server only.
+7) Chef server components:
+    a) Clients :: Nodes, cookbook authors, Chef manage users
+    b) Load Balancer :: Nginx is used as fron end load Balancer
+    c) Chef Manage :: Web UI for chef server
+    d) Chef server :: The place to hold all you cookbooks, there metadata, policies and all
+    e) Bookshelf :: Bookshelf is used to store cookbook content—files, templates, and so on—that have been uploaded
+         to the Chef Infra Server as part of a cookbook version.
+          If two different cookbooks or different versions of the same cookbook include the same file or template, 
+          Bookshelf will store that file only once
+    f) messages :: chef-elasticsearch wraps Elastisearch and exposes its REST API for indexing and search. 
+        All messages are added to a dedicated search index repository.
+    g) PostgreSQL :: PostgreSQL is the data storage repository for the Chef Infra Server
+
+Installation of Chef Server
+============================
+There are three configuration scenarios for the Chef Infra Server:
+
+a) Standalone (everything on a single machine)
+b) High availability (machines configured for front-end and back-end, allowing for failover on the back-end and 
+    load-balancing on the front-end, as required)
+c) Tiered (machines configured for front-end and back-end, with a single back-end and load-balancing on the 
+    front-end, as required)
+In this course we will proceed with standalone installation of chef server 
+
+Steps
+======
+1) Download the package from https://downloads.chef.io/chef-server/
+2) once downloaded sent it to chefserver vagrant machine
+    # scp -p chef-server-core-12.17.33-1.el7.x86_64.rpm vagrant@192.168.10.21:/tmp
+3) # cd /tmp
+    # rpm -Uvh chef-server-core-12.17.33-1.el7.x86_64.rpm
+4) then we have to configure the chef server by using below command
+    # chef-server-ctl reconfigure
+5) Then lets create the user(administrator) with the help of below command in order to manage the chef server
+    # chef-server-ctl user-create sharmasag018 Sagar Sharma sharmasag018@outlook.com 'Ishwarusmay19922005' --filename /home/sharmasag018/sagar.pem
+    # chef-server-ctl user-show
+6) Then lets create the organization 
+    # chef-server-ctl org-create skylights 'Sky Lights, Inc.' --association_user sharmasag018 --filename /home/sharmasag018/skylight-validator.pem
+    # chef-server-ctl org-show
+7) Now lets install chef-manage in order to access the chef server from web console
+    # chef-server-ctl install chef-manage
+    then
+    # chef-server-ctl reconfigure
+    then 
+    # chef-manage-ctl reconfigure
+        # press any key
+        # then enter and press end
+        # then q and type yes and enter
+        This is how you will accept the license.
+        and chef manage will be reconfigured.
+8) Finally you can access the chef server using below IP
+    192.168.10.21
+    from browser and you will see what we have configured called chef-manage.
+9) Now on Chef-Manage UI >> Administration >> choose organization >> click on starter kit in left pane >> 
+    Download starter kit >> agree to reset the old keys
+10) unzip the downloaded chef-starter >> copy the chef-repo from inside of it and put it under our chef project 
+    directory :: /c/Users/Sagar/projects/chef
+    and then move the cookbooks directory we have created till now to theis chef-repo folder
+    So now all our cookbooks reside inside the :: /c/Users/Sagar/projects/chef/chef-repo/cookbooks
+11) Now once the starter-kit has been downloaded from the chefserver Web UI and kept inside our chef project
+    working directory, we can now access the chef server using knife command from our local windows
+    workstation.
+    for now we can test this using below commands
+    # knife node list 
+    This will give an error due to ssl certificate so we can run first below command
+    # knife ssl fetch
+    then finally run
+    # knife node list
+    This will note give any output as of now as we haven't bootstrapped any node yet.
+    
+
