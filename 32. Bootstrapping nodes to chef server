@@ -1,0 +1,90 @@
+1) The node may not have chef installed. It may not have details of whee the chef server is located or the  
+    credentials to securely talk to chef server 
+2) So to add those credentials we can bootstrap that node to install all those components.
+3) syntax of bootstrap command that we are going to use in order to attach our nodes to chef server
+    # knife bootstrap FQDN -x user -P password --sudo -N node_name
+4) So here basically we are going to run above knife bootstrap command to install chef-client on target node and
+    also give it a security credentials and knife.rb file which is present in our .chef directory of chef-repo
+    on our workstation. With these pieces of information we could contact chef server, receive a list of cookbook 
+    that target node it supposed to run and step through those cookbooks 
+5) Now once we have our vagrant VM's up and running, lets check the ssh configuration of these VM's which will 
+    give us the information that can be used to bootstrap these nodes to chef server.
+    # vagrant ssh-config
+    ========================================================================================= 
+    Host web1
+    HostName 127.0.0.1
+    User vagrant
+    Port 2222
+    UserKnownHostsFile /dev/null
+    StrictHostKeyChecking no
+    PasswordAuthentication no
+    IdentityFile C:/Users/Sagar/projects/chef/.vagrant/machines/web1/virtualbox/private_key
+    IdentitiesOnly yes
+    LogLevel FATAL
+    ==========================================================================================
+    So basically this information above for web1 is telling me on which port do i have to bootstrap this node
+    and also the location of the identity file for this web1 VM on our base machine.
+6) Now lets use the below command to bootstrap our node web1 with the chef server.
+
+    # knife bootstrap localhost --ssh-port 2222 --ssh-user vagrant --sudo --identity-file 
+    /c/Users/Sagar/projects/chef/.vagrant/machines/load-balancer/virtualbox/private_key -N web1
+
+    So this command is going to do below tasks
+    a) Create new client for web1
+    b) create new node object for web1
+    c) IT is going to chef whether chef is already installed on web1 and if not then install it.
+    d) then it is going to start resolving for cookbooks if present in the runlist and let is know if the
+        runlist is empty
+    e) it then start converging the resources if cookbooks are present in the runlist.
+    f) and finally tell us the number of resources converged on web1.
+7) Now if we run again the below command we will get the name of the node bootstrapped with chef server
+    # knife node list
+        web1
+8) We could also see the details about this node using 
+    # knife node show web1
+        Node Name:   web1
+        Environment: _default
+        FQDN:        web1
+        IP:          10.0.2.15
+        Run List:
+        Roles:
+        Recipes:
+        Platform:    centos 7.2.1511
+        Tags:
+    So we can see the details of the node web1 over here. and this is basically called as node object.
+    this node object shows the informaton such as :
+        a) node name
+        b) Environment
+        c) FQDN and IP
+        d) Runlist 
+        e) Roles
+        f) Recipes
+        g) platform info and tags.
+9) Now lets go ahead and ad our cookbooks, workstation and webserver in our run list for this node object.
+    # knife node run_list add web1 "recipe[workstation], recipe[webserver]"
+        web1:
+            run_list:
+                recipe[workstation]
+                recipe[webserver]
+        notice that the cookbooks are added in the exact same order as we have passed them to the command.
+    Now again if we check our node object:
+    # knife node show web1
+        Node Name:   web1
+        Environment: _default
+        FQDN:        web1
+        IP:          10.0.2.15
+        Run List:    recipe[workstation], recipe[webserver]
+        Roles:
+        Recipes:
+        Platform:    centos 7.2.1511
+        Tags:
+10) So now once we have our cookbooks updated to the runlist of our node object for node web1, lets login to
+    web1 manually and execute the chef-client over there.
+    # vagrant ssh web1
+    # sudo chef-client
+    notice that now are no more running the chef client in a local mode.
+    and this will converge our node web1 with both the cookbooks available and we can verify by running below
+    commnad on web1
+    # cat /etc/motd
+    # curl localhost
+11) You can now login to chef-manage and check the node information on the chef-server as well.

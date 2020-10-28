@@ -1,0 +1,34 @@
+1) Before we start uploading the cookbooks to chef server we could easily validate that whether we are able to
+    connect to our chef server from out client workstation where we have our chefdk.
+2) for that we could run the below knife command
+    # knife client list ==> list all the available organizations available on chef server.
+        o/p : skylights-validator
+3) If we notice inside our directory chef-repo we have a hidden folder named as .chef and inside that we have 
+    some files which are actually responsible for connection between the chefdk and chef server and those are
+    a) config.rb -- This contains the configuration information about the chef server 
+        current_dir = File.dirname(__FILE__)
+        log_level                :info
+        log_location             STDOUT
+        node_name                "sharmasag018"
+        client_key               "#{current_dir}/sharmasag018.pem"
+        chef_server_url          "https://chefserver/organizations/skylights"
+        cookbook_path            ["#{current_dir}/../cookbooks"]
+        So it basically contain the chef server URL and the .pem key file we have generated and stored inside the 
+        chef server.
+    b) and the key for user ID sharmasag018 on chef server, 
+    we could could also mention these details such as chef server name and the path to .pem key in the
+        # knife configure command
+4) Now lets upload our workstation cookbook to the chef server using below commands
+    # knife cookbook upload workstation   -- this is from inside of the chef-repo directory
+        o/p ::
+        Uploading workstation  [0.3.1]
+        Uploaded 1 cookbook.
+    Now lets upload the webserver cookbook as well
+    # knife cookbook upload webserver 
+    # knife cookbook list
+5) You have to be carefull while uploading the cookbooks to the chef server because if you by chance upload the 
+    cookbook with same version number again , then knife is going to override the old cookbook in the chefserver.
+    thats the reason to track the changes we are changing the version of the cookbook in the metadata file.
+6) now once we have uploaded the cookbooks to chef server we could actually see them in the chef manage UI on web .
+7) One more thing to notice here is that our tests directories are not copied/uploaded to the chef server.
+

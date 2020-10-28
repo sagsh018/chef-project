@@ -1,0 +1,14 @@
+1) So now that we have chef hosted chef server ready with us and we have downloaded the required creds and keys
+    along with chef starter-kit to talk to chef server and also uploaded our cookbooks to chef server.
+2) Its now time to setup our new environment using the vagrant VM's
+    Environment :
+    a) Web server 1
+    b) Web server 2
+    c) Load Balancer
+    So in total we have to spin up three new nodes, two web server nodes which we are going to configure with the 
+    help of chef and one load balancer which is going to distribute the load between these two web server nodes.
+3) So lets go ahead and take the backup of our orginal vagrant file and replace it with the new configuration
+    # cp -p Vagrantfile bkp.Vagrantfile.`date +%F`
+    and replcae the old vagrantfile with the new one downloaded from course.
+    chef out the new vagrant file having configuration for web1, web2 and loadbalancer nodes.
+    

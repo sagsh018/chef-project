@@ -85,3 +85,24 @@ Steps
     This will note give any output as of now as we haven't bootstrapped any node yet.
     
 
+Using Chef hosted chef server
+===============================
+1) URL ==> https://manage.chef.io/signup
+    Full Name : Sagar Sharma
+    Company : skylights
+    email : sharmasag018@outlook.com
+    Username : sharmasag018
+    check the license agreement and click on continue
+    verify the account from email sent on above email ID 
+    Then on the next page give the password for your chef hosted account
+    password : same as that of default.
+    click on create user
+    This will create your chef hosted account
+2) Once you create your chef hosted account as above and login to the chef manage page hosted by chef with your
+    creds, it is going to welcome you with the page to create your organization
+    => click on create organization >> provide full name (Sky Lights, Inc.) and short name (skylights) for your
+        organization >> click on create organization
+3) Once that is done, chef manage will then show you the next page of administration from where you can again
+    download the starter kit for your organization and place it under our chef project working directory and
+    copy our cookbook folder into the the chef-repo folder created after unzipping that started kit.
+4) Our URL to login to our organization on chef server :: https://api.chef.io/organizations/skylights
