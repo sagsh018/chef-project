@@ -1,0 +1,43 @@
+1) Now once we have our cookbook ready and uploaded to chef server with the help of berkshelf, we are now ready to 
+    bootstrap the load balancer node and conver it with the help of myhaproxy cookbook.
+2) # vagrant ssh-config
+    # knife bootstrap localhost --ssh-port 2201 --ssh-user vagrant --identity-file /c/Users/Sagar/projects/chef/.vagrant/machines/load-balancer/virtualbo
+        Yx/private_key --sudo -N load-balancer --run-list 'recipe[myhaproxy]'
+        So this command is going to do three things
+        a) Its going to bootstrap the node load-balancer with chef server
+        b) Then its going to add the myhaproxy to the runlist of node load-balancer
+        c) Then the chef-client will run to converge the node the very first time chef-client run on the 
+            node while bootstrapping itself.
+    So once our node is bootstrapped, myhaproxy is added to runlist of it and chef-clent run completed
+    our load-balancer node will be ready
+3) We can check the node object for our node load-balancer
+    # knife node show load-balancer
+4) Also we can validated that whether our load-balancer node is configured properly or not by login into that
+    and run the 
+    # curl localhost,
+    now this curl localhost command traffic will be sent to web1 webserver node by the load-balancer as we have mentioned
+    in the default recipe for it to be configured
+    # vagrant ssh load-balancer
+    # curl localhost
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset=" utf-8 ">
+            <title>Web Server Main Page</title>
+        </head>
+        <body>
+            <img src="my_image.png" srcset="my_image.png 2x">
+            <h1>Hello Sagar..!</h1>
+            <h2>This line is added to show example of notifies</h2>
+            <h2>This line is added to show example of subscribes</h2>
+            <h2>Hostname :: web1 </h2>
+            <h2>IP Address :: 10.0.2.15 </h2>
+        </body>
+        </html>
+    So this shows that our load-balancer node is correctly converged and it is diverging the http traffic comming to
+    it to the webserver node web1.
+5) one last thing to note here is that because of below mentioned line in the vagrant file
+    n.vm.network "forwarded_port", guest: 80, host: 9000
+    we have forwarded our traffic on the load-balancer guest from port 80 to localhost on port 9000
+    so we can see this in browser as below
+    http://localhost:9000/
