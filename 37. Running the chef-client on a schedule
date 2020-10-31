@@ -1,0 +1,48 @@
+1) So to enable this functionality of chef-client run on a schedule we will be creating a wrapper cookbook and then
+    we will be using supermarket cookbook named chef-client and use this as a dependancy in our newly created 
+    wrapper cookbook
+2) So here we are going to make use of two attributes of this chef-client comunity cookbook to schedule our 
+    chef-client run 
+    1) node['chef_client']['interval'] - Sets Chef::Config[:interval] via command-line option for number of seconds between chef-client daemon runs. 
+        Default 1800.
+    2) node['chef_client']['splay'] - Sets Chef::Config[:splay] via command-line option for a random amount of seconds to add to interval. 
+        On windows, this value is used for the scheduled task's random delay. Default 300.
+3) There are multiple recipes inside this communitiy cookbook "chef-client" such as client.rb which is the master recipe file responsible
+    for our chef client run. here you could modify how you want your chef-client to behave when it runs on the node. Like what attributes it
+    should collect, and what all it should skip etc.
+4) So lets go ahead and implement the funtionality for scheduling the chef-client run with the help of wrapper cookbook "mychef-client" and
+    community cookbook "chef-client"
+    # cd /c/Users/Sagar/projects/chef/chef-repo
+    # chef generate cookbook cookbooks/mychef-client
+5) Now lets add the dependancy for this cookbook as the community cookbook named "chef-client"
+    # vi cookbooks/mychef-client/metadata.rb
+        depends 'chef-client', '~> 12.3.3'
+6) Once we have added this dependancy inside our metadata.rb file ew have to now override the attributes
+    coming from the community cookbook, i.e. interval and slay in default.rb recipe of our own wrapper cookbook
+    mychef-client
+    # vi cookbooks/mychef-client/recipes/default.rb
+        node.default['chef-client']['interval'] = '300'
+        node.default['chef-client']['splay'] = '60'
+    and also we will include the default recipe from community cookbook "chef-client" which is available to us 
+    from supermarket due to depends keyword in metadata.rb file 
+        include_recpie 'chef-client::default'
+    This in trun will include service.rb recipe, and this service.rb file will inturn include systemd_service.rb
+    and that will inturn set the interval and splay time for the node, on which it runs.
+
+    so thats all we have to do to our wrapper cookbook for now
+7) lets save it and upload it to the chef-server along with all its dependancy using berkself.
+    # berks install
+    # berks upload
+8) Once our wrapper cookbook is uploaded to chef server using berks along with all its dependancies, we will then
+    add the mychef-client cookbook to runlist of our load-balancer cookbook as we want the chef-client to run
+    on that perticular node on scheduled interval
+    # knife node show load-balancer  ==> to check the current runlist for this node
+    # knife node run-list set load-balancer "recipe[mychef-client],recipe[myhaproxy]"
+        So this is going to add the mychef-client recipe before the myhaproxy and node will be converged first for
+        this recipe.
+9) Now once the new recipe is added to the runlist of my node load-balancer, i need to login to load-balancer
+    and run the chef-client
+    # vagrant ssh load-balancer
+    # sudo chef client
+    
+

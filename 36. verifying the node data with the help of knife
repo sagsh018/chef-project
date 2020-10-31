@@ -1,0 +1,35 @@
+# knife node list
+# knife cookbook list
+for details of any perticular cookbook we could use
+# knife cookbook show myhaproxy
+    myhaproxy   0.1.3  0.1.2  0.1.1  0.1.0
+    So it has given me all the versions available on chef server for this perticular cookbook
+    now suppose
+    # knife cookbook show myhaproxy 0.1.3
+    This will given even more information for this perticular version of cookbook with the help of metadata updated 
+    for this cookbook to chef server.
+
+Similarly to get the details about the node we could use 
+# knife node show web1
+Also if we want to see the attributes for the node let say web1
+# knife node show web1 -a ipaddress
+# knife node show web1 -a hostname
+# knife node show web1 -a node
+    Now this last one is going to list all the attributes stored inside the chef server as the node object of this 
+    perticular node web1. Notice these attributes are collected during the last successful chef-client run on
+    web1 and then are stored inside the chef server as a node object.
+    and from chef server we have asked using the knife command as above
+
+
+We could even list the sub attributes by passsing them in the above command using the dots
+# knife node show web1 -a memory
+# knife node show web1 -a memory.total
+# knife node show web1 -a cpu
+# knife node show web1 -a cpu.0.mhz
+
+So all this information about the attributes of node can be usefull and can be gathered from the chef server
+using knife command.
+
+Also we could see what all cookbooks are deployed on my node like there versions and all with the special
+node attribute called cookbook
+# knife node show load-balancer -a cookbooks
