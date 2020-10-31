@@ -1,0 +1,125 @@
+1) A Role is a way to define certain pattern and processes that exist across nodes in an organization as 
+    belonging to single job function
+2) Each role consist of zero or more attributes and run-list
+3) Each node consist of zero or more roles assigned to it.
+4) Basic advantage of role is to have it like a one central location where we can update new run-lists and attributes
+    and those runlists and attributes are applied to all the nodes, where this perticualar role is added.
+
+
+Methods of creating and assigning roles to perticular node
+==============================================================
+1) if you notice, after we have downloaded onr chef starter-kit from chef manage, we got one directory under 
+    chef-repo named as roles. under this directory we have starter.rb file, which we can follow to create our
+    first role.
+2) so inside this directory : /c/Users/Sagar/projects/chef/chef-repo/roles
+    we could create a role named : web.rb
+    ======================================================
+        name "web"
+        description "Web server role"
+        run_list "recipe[workstation]","recipe[webserver]"
+        default_attributes "apache_test => {
+            "attribute1" => "Hello from attribute 1"
+            "attribute2" => "you are great"
+        }
+    =======================================================
+3) Now we can upload this role created above "web.rb" to the chef server. and we can do this with the below 
+    command
+    # knife role from file roles/web.rb
+        Updated Role web
+    # knife role list
+        web
+    # knife role show web
+        chef_type:           role
+        default_attributes:
+        apache_test:
+            attribute1: Hello from attribute 1
+            attribute2: you are great
+        description:         Web server role
+        env_run_lists:
+        json_class:          Chef::Role
+        name:                web
+        override_attributes:
+        run_list:
+            recipe[workstation]
+            recipe[webserver]
+    # knife role show web -F json
+        {
+            "name": "web",
+            "description": "Web server role",
+            "json_class": "Chef::Role",
+            "default_attributes": {
+                "apache_test": {
+                    "attribute1": "Hello from attribute 1",
+                    "attribute2": "you are great"
+                }
+            },
+            "override_attributes": {
+
+            },
+            "chef_type": "role",
+            "run_list": [
+                "recipe[workstation]",
+                recipe[webserver]"
+            ],
+            "env_run_lists": {
+
+            }
+        }
+4) After we have uploaded the role "web" to our chef server, we have to add this role not in the runlist of the
+    nodes, where we want this role to be applied.
+    # knife node show web1
+        Node Name:   web1
+        Environment: _default
+        FQDN:        web1
+        IP:          10.0.2.15
+        Run List:    recipe[workstation], recipe[webserver]
+        Roles:
+        Recipes:     workstation, workstation::default, webserver, webserver::default, workstation::setup, webserver::server
+        Platform:    centos 7.2.1511
+        Tags:
+    # knife node run_list set web1 "role[web]"
+        Now this is going to add the role "web" to the runlist of the node web1
+    # knife node show web1  
+        Node Name:   web1
+        Environment: _default
+        FQDN:        web1
+        IP:          10.0.2.15
+        Run List:    role[web]
+        Roles:
+        Recipes:     workstation, workstation::default, webserver, webserver::default, workstation::setup, webserver::server
+        Platform:    centos 7.2.1511
+        Tags:
+        So if we notice we can see that the runlist section is now updated with the role web instead of
+        runlists individually.
+    # vagrant ssh web1
+    # sudo chef-client
+        So as soon as the chef-client run's, it is going to identify in the runlist that there is a role available
+        named as web in the web1 node object
+    # exit 
+    # knife node show web1
+        Node Name:   web1
+        nvironment: _default
+        FQDN:        web1
+        IP:          10.0.2.15
+        Run List:    role[web]
+        Roles:       web
+        Recipes:     workstation, workstation::default, webserver, webserver::default, workstation::setup, webserver::server
+        Platform:    centos 7.2.1511
+        Tags:
+        So now the roles section of the node object is aware of the role available.
+5) lets do the same step with the web2 webserver
+    # knife node run_list set web2 "role[web]"
+    # knife node show web1
+    # vagrant ssh web2
+    # sudo chef-client
+    # exit
+    # knife node show web2
+        Node Name:   web1
+        Environment: _default
+        FQDN:        web1
+        IP:          10.0.2.15
+        Run List:    role[web]
+        Roles:       web
+        Recipes:     workstation, workstation::default, webserver, webserver::default, workstation::setup, webserver::server
+        Platform:    centos 7.2.1511
+        Tags:

@@ -1,0 +1,54 @@
+1) code roles/load-balancer.rb
+    name "load-balancer"
+    description "This is a role for load balancer myhaproxy cookbook"
+    run_list "recipe[mychef-client]","recipe[myhaproxy]"
+2) Now lets upload the this created role to the chef server first
+    # knife role from file roles/load-balancer.rb 
+    # knife role list
+    # knife role show load-balancer
+        chef_type:           role
+        default_attributes:
+        description:         This is a role for load balancer myhaproxy cookbook
+        env_run_lists:
+        json_class:          Chef::Role
+        name:                load-balancer
+        override_attributes:
+        run_list:
+            recipe[mychef-client]
+            recipe[myhaproxy] 
+3) knife node show load-balancer
+    Node Name:   load-balancer
+    Environment: _default
+    FQDN:        load-balancer
+    IP:          10.0.2.15
+    Run List:    recipe[mychef-client], recipe[myhaproxy]
+    Roles:
+    Recipes:     mychef-client, mychef-client::default, myhaproxy, myhaproxy::default, chef-client::default, chef-client::service, chef-client::systemd_service
+    Platform:    centos 7.2.1511
+    Tags:
+3) lets add the role to the runlist of the node load-balancer
+    # knife node run_list set load-balancer "role[load-balancer]"
+    # knife node show load-balancer
+        Node Name:   load-balancer
+        Environment: _default
+        FQDN:        load-balancer
+        IP:          10.0.2.15
+        Run List:    role[load-balancer]
+        Roles:
+        Recipes:     mychef-client, mychef-client::default, myhaproxy, myhaproxy::default, chef-client::default, chef-client::service, chef-client::systemd_service
+        Platform:    centos 7.2.1511
+        Tags:
+    # vagrant ssh load-balancer
+    # sudo chef-client
+    # exit
+    # knife node show load-balancer
+        Node Name:   load-balancer
+        Environment: _default
+        FQDN:        load-balancer
+        IP:          10.0.2.15
+        Run List:    role[load-balancer]
+        Roles:       load-balancer
+        Recipes:     mychef-client, mychef-client::default, myhaproxy, myhaproxy::default, chef-client::default, chef-client::service, chef-client::systemd_service
+        Platform:    centos 7.2.1511
+        Tags:
+    
