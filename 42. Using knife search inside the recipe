@@ -1,0 +1,15 @@
+1) So here we are going to include the searching capabilities on the chef server in the recipe itself
+2) with the help of technique we are going to build the dynamic load-balancer
+3) go through the myhaproxy default recipe and try to understand how we have replaced the harcoded values of
+    webserver with the dynamically generated array of servers along with there IP address.
+4) Once we have updated the default.rb recipe of myhaproxy cookbook and replaced the hardcoded values with the 
+    dynamically generated array of servers based on the search() method call on INDEX=> node and SEARCH=> "role:web"
+5) after updating the cookbook, we will update the version of the cookbook as well to 1.0.0, then upload the 
+    cookbook to chef server using berks upload
+    # cd cookbooks/myhaproxy/
+    # berks upload
+    # vagrant ssh load-balancer
+    # sudo chef-client
+6) Then you can check whether the newest verson of the cookbook is applied or not
+    # knife node show load-balancer -a cookbooks
+7) 

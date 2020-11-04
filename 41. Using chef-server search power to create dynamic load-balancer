@@ -1,0 +1,93 @@
+1) So here we are going to make use of the power of searching capability of the different things from the chef-server
+    using the knife search command.
+2) As we know that as soon as we bootstrap any node to our chef-server, an initial chef-client runs  on that node
+    and collect whole lot of information related to that node for example, with the help of ohai all the system
+    attributes and other information as well. and at the end of chef-client run, it upload all that information
+    in a form of node object to the chef-server.
+3) The chef-server inturn has all this information stored on prostress database. So with this functionality we 
+    can go and search all this information on the chefserver.
+4) we can actually search through the chef-server in to ways:
+    a) using knife command
+    b) dynamicaly inside our recipes 
+5) we ould use search to query the data indexed on chef server using below command
+    # knife search INDEX SEARCH_QUERY
+    Then this search runs on the chef server and is invoked from within the recipe or using knife
+6) INDEX can be :
+    a) client : machines that are authenticated to talk to the chef server - load-balancer, skylight-validator, 
+        web1, web2 in our case.
+    b) environment : helps in keeping the track of perticular nodes having specific environment assinged to it.
+    c) node : All the node object for your infrastructure
+    d) role : which is used to search all the nodes having perticular role associated.
+    e) data bag : custom set of data that we might want to store on chef server and then later use it in our recipe
+7) SEARCH_QUERY : this is of format attribute:value
+    Quering *:* returns everything.
+8) So we are going to make use of this facility of searching the chef server and use to build the dynamic 
+    load balancer by providing the webserver pool to balance the load for dynamically instead of hardcoding 
+    them as we have previously done.
+
+RUNNING SEARCHES WITH KNIFE 
+=============================
+# knife node show web1 -- This is internally searching for the node INDEX in the chef server for a node that has
+    node name of web1 and return the node object for node web1
+We can even ask for the specific value inside the node as well with the help of option -a 
+for example :
+# knife node show web1 -a node ==> this will return the entire node object itself and return all the values that 
+    this node object contain
+# knife node show web1 -a ipaddress => This will search the chef server in the node INDEX and search for perticular
+    value ipaddress and return the value for that
+# knife node show web1 -a memory.total
+but if you notice the above command, we are getting the results only for one node web1. 
+
+Suppose if we wamt to search across multiple nodes, than in that case knife search can only be usefull
+
+Syntax for search command
+==========================
+# knife search INDEX(client, node, role, environment, data_bag) SEARCH_QUERY ("key:value")
+
+examples:
+==========
+
+# knife search node "*:*"
+    => This is going to return the exactly same kind of summary which knife node shoe <node name> command return
+# knife saerch node "*:*" -a ipaddress
+    => returns the ipaddress values for all the nodes
+        load-balancer:
+            ipaddress: 10.0.2.15
+
+        web2:
+            ipaddress: 10.0.2.15
+
+        web1:
+            ipaddress: 10.0.2.15
+# knife search node "name:web1"
+    => return information about just a node web1
+        Node Name:   web1
+        Environment: _default
+        FQDN:        web1
+        IP:          10.0.2.15
+        Run List:    role[web]
+        Roles:       web
+        Recipes:     workstation, workstation::default, webserver, webserver::default, workstation::setup, webserver::server
+        Platform:    centos 7.2.1511
+        Tags:
+# knife search node "name:web*"
+    => gives the information for all the nodes start with web
+# knife search node "role:web"
+    => This is going to search all the nodes in the node index which are having role assinged to them as web
+# knife search node "role:web" -a ipaddress
+
+# knife search role "*:*"
+    => going to search and return all the roles available on chef server
+# knife search role "name:web"
+    => going to search and return the role named web
+# knife search role "name:web" -a run_list
+    => return all the runlist under role web
+# knife search node "role:web AND recipe:webserver"
+    => search and return nodes information where role is web and recipe webserver is present
+
+So we can clearly see that knife search command is very powerful and can be used for troubleshooting purpose as 
+well.
+When we want to retrieve some attributes to troubleshoot we can do with the help of search command
+and these attributes are almost real time, because they are updated as per the last chef-client run.
+
+

@@ -11,6 +11,21 @@ haproxy_frontend 'http-in' do
   default_backend 'servers'
 end
 
+=begin
+all_web_nodes = search('node', 'role:web') # here node is INDEX and role:web is search expression
+
+servers = []
+
+all_web_nodes.each do |web_node|
+  server = "#{web_node['hostname']} #{web_node['ipaddress']}:80 maxconn 32"
+  servers.push(server)
+end
+
+haproxy_backend 'servers' do
+  server servers
+end
+=end
+
 haproxy_backend 'servers' do
     server [
       'web1 192.168.10.43:80 maxconn 32',

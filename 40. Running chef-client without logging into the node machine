@@ -1,0 +1,22 @@
+1) So till now we have logged into the node machine like web1, web2, load-balancer in order to run the chef-client
+2) Now we will try to under stand the commmand that we can run on our workstation and without logging into our
+    nodes we can run chef-client/or any other command on the node.
+3) below is the command 
+    # knife ssh localhost "sudo chef-client" --manual-list --ssh-port 2222 --ssh-user vagrant --ssh-identity-file 
+        /c/Users/Sagar/projects/chef/.vagrant/machines/web1/virtualbox/private_key
+    So with this command we could run any command on the remote nodes with the help of knife ssh command.
+4) If we notice the knife ssh command we have used above,
+    we  could also provide the search pattern to this command and it will go and search the required on the 
+    chef server and then run the chef-client against that
+    but this is possible in more production like environment where we have all the servers are runnon on the 
+    same port as 22 instead of our case where all the vagrant VM's are running with different ports 
+5) Example of some such commands
+    # knife ssh "*:*" -x chef -P chef "sudo chef-client"
+        here all the nodes will be converged in one go
+    # knife ssh "role:web" -x chef -P chef "sudo chef-client"
+        so all the nodes with the role named : web, will be converged in one go.
+    # knife ssh "name:web1" -x chef -P chef "sudo chef-client"
+        here only one node named : web1 will be converged.
+    So if we notice in the above commands we are passing the searching regular expression in the command and 
+    followed by that we are giving the username and password and followed by that we are also giving the command
+    to be run for the item we are searching.
