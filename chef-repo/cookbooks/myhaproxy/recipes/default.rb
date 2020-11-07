@@ -12,7 +12,7 @@ haproxy_frontend 'http-in' do
 end
 
 =begin
-all_web_nodes = search('node', 'role:web') # here node is INDEX and role:web is search expression
+all_web_nodes = search('node', "role:web AND chef_environment:#{node.chef_environment}") # here node is INDEX and role:web is search expression
 
 servers = []
 

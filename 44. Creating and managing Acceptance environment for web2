@@ -1,0 +1,32 @@
+1) So as per previous section we have added both web1 and load-balancer node to the environment named production
+2) This production environment has cook restrictions as well.
+3) In this section we are going to create another environment named as Acceptance environment which will not have
+    any restriction of cookbooks. This will be a king of testing environment for our new code that we will 
+    develop
+
+# vi environments/acceptance.rb
+    ==============================================
+    name "acceptance"
+    description "This is where our test code runs"
+    ================================================
+# knife environment list
+    _default
+    acceptance
+    production
+# knife environment show acceptance
+    chef_type:           environment
+    cookbook_versions:
+    default_attributes:
+    description:         This is where our test code runs
+    json_class:          Chef::Environment
+    name:                acceptance
+    override_attributes:
+# knife node environment set web2 acceptance
+# knife node show web2
+    Node Name:   web2
+    Environment: acceptance
+# vagrant ssh web2
+# sudo chef-client
+
+Important Note :: We could also assign environment to node while bootstrapping it. by using option -E in 
+                    bootstrapping command.

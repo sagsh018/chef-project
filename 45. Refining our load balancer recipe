@@ -1,0 +1,56 @@
+1) So till now we have refined our load-balancer default recipe till the point where we are dynamically finding out 
+    the name of web server, and based on that our load-balancer node is diverting the traffic.
+2) In previous section we have also understood the concept of environment and we have created and assigned two 
+    different environment to our nodes as below
+    load-balancer ==> production
+    web1 ==> production
+    web2 ==> acceptance
+3) Now we will refine our load-balancer default recipe even more and we will even determine the environment
+    of the load-balancer whatever is assigned to it at that moment and than based on that we will extract the
+    webserver node of the same environment as that of load-balancer node.
+    Below line in the default recipe of myhaproxy will take care of that
+    ========================================================================================
+    all_web_nodes = search('node', "role:web AND chef_environment:#{node.chef_environment}")
+    ===========================================================================================
+    see the recipe default.rb to understand better.
+4) Next we will update our cookbook version in the metadat file to update the patch version of the cookbook because
+    we have added the extra functionality to the cookbook 
+    updated from ==> 1.0.1 to 1.1.1
+    save it as well
+5) After this we will upload our modified cookbook along with all its dependancy using berkself
+    # cd /c/Users/Sagar/projects/chef/chef-repo/cookbooks/myhaproxy
+    # berks upload
+6) once uploaded to chef server we can now login to load-balancer and converge the node again
+    # vagrant ssh load-balancer
+    # sudo chef-client
+7) But if you will notice the chef-client run on load-balancer node in previous step while converging it you
+    will notice that none of the resource is modified at all. and according to our new functionality our
+    load-balancer node which is in production environment should only divert the traffic to production node
+8) But after the previous run we don't have required functionality installed yet. The reason is the environment
+    we are using for load-balancer.
+    since we have kept our environment as prduction for load-balancer, the myhaproxy cookbook version for 
+    production node is restricted to version 1.0.1, and the new finctionality is in version number 1.1.1 which is
+    restricted in production environment node.
+9) So to overcome this we can modify our environment and then update it again on the chef server b changing the 
+    new cookbook version
+    # cd /c/Users/Sagar/projects/chef/chef-repo
+    # vi environments/production.rb
+        update the cookbook version allowed as 1.1.1
+        save the file.
+    # knife environment from file environment/production.rb
+    # knife environment show production
+        To check whether environment is updated or not
+10) So as soon as we have updated our environment and load-balancer is already a part of production environment,
+    we can again login to load-balancer and converge the node again and this time it should be converged with the
+    latest cookbook version as this time it is allowed to the modification made in our environment
+    # vagrant ssh load-balancer
+    # sudo chef-client
+11) This wim we will notice that the changes are made to the file 
+    /etc/haproxy/haproxy.cfg 
+    and it contain only one server in the backend_nodes to divert the traffic that is web1 as only that node is
+    having environment as production which has matched the environment of load-balancer.
+12) we can login to load-balancer and check again by
+    # curl localhost
+    This will divert the traffic only to web1 
+13) The same experitment can be done by changing the environment of load-balancer from production to acceptance
+    and than load-balancer will divert  traffic only to web2.

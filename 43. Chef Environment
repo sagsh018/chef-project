@@ -1,0 +1,123 @@
+1) So here we are going to learn about the concept of environment which helps in identifying what version of 
+    cookbook should run on server depending on its environment
+2) every node in chef is having a default environment named as _default environment and we cannot delete or 
+    modify this environment.
+3) We can create our own custom environment to play with
+
+So firstly we are going to create and manage production environment for our web1 and load-balancer node. And we are 
+going to create this environment locally and upload it to the chef server in a similar way as that of roles
+and once that is done we will assign nodes to this environment and run chef client on them. Than they will come to 
+know that they belong to this environment.
+So lets continue with these steps:
+# knife search node "*:*"
+    ====================================
+    Node Name:   load-balancer
+    Environment: _default
+
+    Node Name:   web2
+    Environment: _default
+
+    Node Name:   web1
+    Environment: _default
+    ====================================
+    So we can clearly see that all the nodes are already part of _default environment and these environments are assinged to these nodes 
+    at the time of bootstrapping of these nodes to the chef server.
+# knife environment list
+    _default
+    So for now we just have one environment named as _default.
+# knife environment show _default
+    =================================
+    chef_type:           environment
+    cookbook_versions:
+    default_attributes:
+    description:         The default Chef environment
+    json_class:          Chef::Environment
+    name:                _default
+    override_attributes:
+    =================================
+    Notice we have feild named as "cookbook_version" So this is a field help us in restricting the cookbook version for perticular environment
+    
+So we are going to create our custom environment locally in the system first and than upload it to chef-server
+# pwd ==> /c/Users/Sagar/projects/chef/chef-repo
+# mkdir environments
+# vim environments/production.rb
+    =================================
+    name "production"
+    description "Where production code runs"
+    ===============================
+    So till now we have just defined the name of an environment and the description of the environment. but we haven't mentioned any 
+    restriction of an environment and thats why this environment as of now called as unrestricted environment,
+    So lets add the cookbook restriction as well to this.
+    =======================================
+    name "production"
+    description "Where production code runs"
+
+    cookbook "webserver", "= 0.4.0"
+    cookbook "myhaproxy", "= 1.0.1"
+    ========================================
+    So now my environment is having restriction of which version of which cookbook will run on nodes associated with production environment.
+
+Similar to that of roles we also have ability to define default and override attributes here inside environment and that whatever attributes
+we define here in this environment will be applicable to all the nodes which are under production environment.
+for example we can put like this ==> default_attributes({})
+
+    So we can than save the this environment file and than we will upload the environment to chef server
+
+# knife environment from file environments/production.rb
+    This will upload our environment to chef server just like we have uploaded our role to chefserver
+# knife environment list
+    _default
+    production
+# knife environment show production
+    ===============================================
+    chef_type:           environment
+    cookbook_versions:
+        myhaproxy: = 1.0.1
+        webserver: = 0.4.0
+    default_attributes:
+    description:         Where production code runs
+    json_class:          Chef::Environment
+    ame:                production
+    override_attributes:
+    ================================================
+# knife environment show production -F json 
+    ================================================
+    {
+        "name": "production",
+        "description": "Where production code runs",
+        "cookbook_versions": {
+            "webserver": "= 0.4.0",
+            "myhaproxy": "= 1.0.1"
+        },
+        "json_class": "Chef::Environment",
+        "chef_type": "environment",
+        "default_attributes": {
+
+        },
+        "override_attributes": {
+
+        }
+    }
+
+Once we have updated our environment "production" to chef server we are not ready to attach our nodes web1 and
+load-balancer to environment production
+
+# knife node environment set web1 production    
+    This will set environment for web1 as production instead of _default
+# knife node show web1  
+    Node Name:   web1
+    Environment: production
+# knife node environment set load-balancer production
+    This will set environment for load-balancer node to production as well
+# knife node show load-balancer
+    Node Name:   load-balancer
+    Environment: production
+Now even though we have updated the node objects of our nodes web1 and load-balancer. these nodes still does not
+know about this yet.
+In order to make node aware about this we have to run chef-client on both the nodes.
+
+# vagrant ssh web1
+# sudo chef-client
+# vagrant ssh load-balancer
+# sudo chef-client
+
