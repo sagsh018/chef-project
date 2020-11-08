@@ -1,0 +1,45 @@
+1) So till now we have created the data bags and uploaded them to chef server.
+2) These newly created data bags on chef server provided us the new search index to search through from our 
+    recipe and make use of the data present inside our data bag container.
+3) So in this section we are going to create a brand new cookbook named as "myusers"
+    # pwd => /c/Users/Sagar/projects/chef/chef-repo
+    # chef generate cookbook cookbooks/myusers
+    # vi cookbooks/myusers/recipes/default.rb
+        Look at the default recipe to have a better idea on how the data inside data bag is used in the recipe.
+        ======================================================
+        search("users", "platform:centos").each do |user_data|
+            user user_data['id'] do
+                comment user_data['comment']
+                uid user_data['uid']
+                gid user_data['gid']
+                home user_data['home']
+                shell user_data['shell']
+            end
+        end
+        =======================================================
+        So here we have used the search inside our recipe and on each search value for platform centos we have 
+        looped in and created a new user based on the data coming out of the data bag.
+4) Next this to do is that to add the newly created cookbook to the role "web" to make sure that all of my webservers
+    should have these set of users created beforehand.
+    # vi roles/web.rb
+        run_list "recipe[myusers]","recipe[workstation]","recipe[webserver]"
+    added the new cookbook to runlist of role web
+    and save it.
+5) Now we have two things that need to be uploaded to chef server, 
+    a) our new cookbook myusers
+    b) our modified role web.
+6) Lets update our cookbook and role to chef server now.
+    # cd cookbooks/myusers
+    # berks install
+    # berks upload 
+    # cd ../..
+    # knife role from file roles/web.rb
+7) Now after uploading everything to chef server we are now ready to converge our web server with the newly 
+    created cookbook.
+    # vagrant ssh web1
+    # sudo chef-client
+    cheking in the system web1
+    # tail /etc/passwd
+        user2:x:5002:1:I am user 2:/home/user2:/bin/bash
+        user1:x:1234:1:test user 1:/home/user1:/bin/bash
+    

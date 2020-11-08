@@ -1,0 +1,123 @@
+1) So here in this section we are going to practice using three users using our data bag to our node web1
+2) Conser the below scenario
+    a) Create 3 users and upload them to the ‘users’ data bag
+    b) Create and upload a ‘groups’ data bag with your users as members
+    c) Update the ‘myusers’ cookbook to add your users to the group using search
+    d) Verify ‘web’ role contains ‘myusers’, Converge your web server
+    e) Verify the new users in the /etc/passwd file
+    f) Verify the new group in the /etc/group file
+
+CREATE 3 users and upload them to "users" data bag
+==================================================
+# mkdir -p data_bags/users
+# vi data_bags/users/anthony.json
+    {
+        "id": "anthony",
+        "comment": "This a user named Anthony",
+        "uid": "5003",
+        "gid": "1",
+        "home": "/home/anthony",
+        "shell": "/bin/bash",
+        "platform": "centos"
+    }
+# vi data_bags/users/gordon.json
+    {
+        "id": "gordon",
+        "comment": "This a user ID for Gordon",
+        "uid": "5004",
+        "gid": "1",
+        "home": "/home/gordon",
+        "shell": "/bin/bash",
+        "platform": "centos"
+    }
+# vi data_bags/users/julia.json
+    {
+        "id": "julia",
+        "comment": "This is a User ID for Julia",
+        "uid": "5005",
+        "gid": "1",
+        "home": "/home/julia",
+        "shell": "/bin/bash",
+        "platform": "centos"
+    }
+# knife data bag show users
+    user1
+    user2
+# knife data bag from file users data_bags/users/anthony.json data_bags/users/gordon.json data_bags/users/julia.json
+    Updated data_bag_item[users::anthony]
+    Updated data_bag_item[users::gordon]
+    Updated data_bag_item[users::julia]
+# knife data bag show users
+    anthony
+    gordon
+    julia
+    user1
+    user2
+
+CREATE AND UPLOAD A "groups" DATA BAG WITH YOUR USERS AS A MEMBERS
+====================================================================
+# vi data_bags/groups/group1.json
+    {
+        "id": "chefs",
+        "gid": "5000",
+        "members": ["anthony", "gordon", "julia"],
+        "platform": "centos"
+    }
+# knife data bag create groups
+# knife data bag from file groups data_bags/groups/group1.json
+    Updated data_bag_item[groups::chefs]
+# knife data bag show groups
+    5000
+    chefs
+
+UPDATE THE "myuser" COOKBOOK TO ADD YOUR USERS TO THE GROUP USING SEARCH.
+===========================================================================
+# vi cookbooks/myusers/recipes/default.rb
+    Take a look at the recipe again and see how we are searching for a perticular group and adding the user
+    to that group.
+    ===========================================================
+    search("groups", "platform:centos").each do |group_data|
+        group group_data["id"] do
+            gid group_data["gid"]
+            members group_data["members"]
+        end
+    end
+    ============================================================
+# vi cookbook/metadata.rb ==> change the version to 1.0.0
+# cd cookbooks/myusers
+# berks upload
+
+CREATING  A NEW ROLE NAMED AS "base" ROLE AND ADDING IT TO THE WEB ROLE
+=========================================================================
+# vi roles/base.rb
+    name "base"
+    description "This is a basic role that every node should have"
+    run_list "recipe[myusers]"
+# vi roles/web.rb
+    name "web"
+    description "Web server role"
+    run_list "role[base]","recipe[workstation]","recipe[webserver]"
+    default_attributes "apache_test" => {
+        "attribute1" => "Hello from attribute 1",
+        "attribute2" => "you are great"
+    }
+    So instead of adding the myusers cookbook as a part of web role we have added new bas role as a nested role
+    to the runlist of a web role.
+# vi roles/load-balancer.rb
+    name "load-balancer"
+    description "This is a role for load balancer myhaproxy cookbook"
+    run_list "role[base]", "recipe[mychef-client]", "recipe[myhaproxy]"
+# cd /c/Users/Sagar/projects/chef/chef-repo
+# knife role from file roles/web.rb roles/base.rb roles/load-balancer.rb
+    This will upload all the updates related to roles to the chef server too.
+        Updated Role web
+        Updated Role base
+        Updated Role load-balancer  
+
+CONVERGING ALL THREE NODES NOW
+==================================
+# vagrant ssh web1
+# sudo chef-client
+# tail /etc/passwd
+# tail /etc/shadow
+repeat the same steps for other two nodes as well.

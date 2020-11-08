@@ -1,0 +1,131 @@
+1) So in this section of the course we are actually going to create and manage the data bags on our chef server
+2) common use cases for data bags :
+    a) list of common users who want access to certain set of servers,
+3) So in our case, we want to be able to dynamically able to add and remove the users and groups on any perticular
+    node that should have them. So for this we are going to make use of Data bags
+4) A data bags is going to be a custom container what will be filled with some basic JSON data that might live on
+    your chef server.
+5) Since data bags are index by chef server, we can search through these data bags from within the recipe and the
+    data down and do something with it.
+6) So lets create the data bag locally first under the directory named as data_bag at the same level of roles
+    and environments
+    # cd /c/Users/Sagar/projects/chef/chef-repo
+    # mkdir -p data_bags
+7) We can all sorts of commands similar to what we have used in case of nodes, roles and environment. for example:
+    # knife data bag --help ==> this will give all sorts of option available.
+    # knife data bag list ==> As of now nothing will be returned as no data bag is created yet.
+8) So lets first create the data bag on our chef server.
+    # knife data bag create users
+        Created data_bag[users]
+    So this has created data bag on our chef server
+    # knife data bag list
+        o/p: users
+    So this time we are getting some output.
+9) So now we are ready to upload data to this data bag on chef server and for that we have to create some custom
+    JSON file on our local machine and that we will upload to this data bag on chef server.
+    # vi data_bags/user1.json
+        {
+            "id": "user1",
+            "comment": "I am user 1",
+            "uid": "5001",
+            "gid": "5001",
+            "home": "/home/user1",
+            "shell": "/bin/bash",
+            "platform": "centos"
+        }
+    # vi data_bags/user2.json
+        {
+            "id": "user2",
+            "comment": "I am user 2",
+            "uid": "5002",
+            "gid": "5000",
+            "home": "/home/user2",
+            "shell": "/bin/bash",
+            "platform": "centos"
+        }
+    So if you observe at the end of above json files we have mentioned the platforms, which means all the platform  
+    which are centos should have this user.
+10) Now lets go ahead and upload these data bag json items to our data bag on chef server named as "users"
+    # knife data bag from file users data_bags/user1.json data_bags/user2.json
+        Updated data_bag_item[users::user1]
+        Updated data_bag_item[users::user2]
+    # knife data bag list
+        users
+    # knife data bag show users
+        user1
+        user2
+    # knife data bag show users/user1
+        comment
+        gid
+        home
+        id
+        platform
+        shell
+        uid
+    So this has shown what all information does this data bag contain for user1
+11) So once this data bag is created and uplodaed to chef server we now have one more index to search into.
+    # knife search users "*:*"
+        chef_type: data_bag_item
+        comment:   I am user 2
+        data_bag:  users
+        gid:       5000
+        home:      /home/user2
+        id:        user2
+        platform:  centos
+        shell:     /bin/bash
+        uid:       5002
+
+        chef_type: data_bag_item
+        comment:   I am user 1
+        data_bag:  users
+        gid:       5000
+        home:      /home/user1
+        id:        user1
+        platform:  centos
+        shell:     /bin/bash
+        uid:       5001
+    So this search has displayed both my users.
+    # knife search users "id:user1"
+        chef_type: data_bag_item
+        comment:   I am user 1
+        data_bag:  users
+        gid:       5000
+        home:      /home/user1
+        id:        user1
+        platform:  centos
+        shell:     /bin/bash
+        uid:       5001
+    # knife search users "id:user1" -a uid
+          uid: 5001
+    So this is how we can perform the searches based on the index data bag and search patterns.
+
+12) Now till now we have created the data bags for users only. let say we want to create the data bag for groups
+    to which the users can be added as well.
+    So again lets create another directory under data_bags named as groups 
+    # mkdir -p data_bags/groups
+14) Now lets go and create another data bag along with users on chef server as well named as groups
+    # knife data bag create groups
+        Created data_bag[groups]
+15) And now lets write the json data into our groups files to upload the data to groups data bag on chef server,
+    # vi code data_bags/groups/group1.json
+        {
+            "id": "5000",
+            "gid": "5000",
+            "members": ["user1", "user2"]
+        }
+16) Now we can uploade this data to groups data bag on chef server
+    # knife data bag from file groups data_bags/groups/group1.json
+        Updated data_bag_item[groups::5000]
+    # knife data bag list
+        groups
+        users
+    # knife data bag show groups
+        5000
+    # knife data bag show groups/5000
+        gid
+        id
+        members
+17) So till now we have created two data bags, named users and groups onto our chef server and performed some
+    search on them.
+18) We can have a look at the data bags created on our chef manage as well under policy section
+        

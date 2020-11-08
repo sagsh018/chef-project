@@ -1,0 +1,37 @@
+1) So till now we have seen the use of a data bag.
+2) Now we will see how to encrypt the data stored inside the data bag with the help of secret key
+# cd ~/chef-repo
+# knife data bag list
+    groups
+    users
+3) Now we will generate the secret key with the help of below openssl command and place it under our chef-repo 
+    only/
+    # openssl rand -base64 512 | tr -d '\r\n' > secret-key
+    # ls 
+            secret-key
+4) Now we can create new data bag named as secret-users with the help of this secret-key generated using below command
+    # knife data bag create secret-users --secret-file secret-key
+        Created data_bag[secret-users]
+    # knife data bag list   
+        groups
+        secret-users
+        users
+5) Now we will update data to this secret-users data bag fromone of our users jsin file named julia.json.
+    # knife data bag from file secret-users data_bags/users/julia.json --secret-file secret-key
+         Updated data_bag_item[secret-users::julia]
+6) Now we can check out the data inside the data bag secret-user and you will find it encrypted
+    # knife data bag show secret-users julia
+        This will show the data inside the data bag secret-users as encrypted
+7) if you want to decrypt the data and then show then use the show command alsong with secret key.
+    # knife data bag show secret-users julia --secret-file secret-key
+
+8) So till now we have just encrypted the data using the personal key which we have created. but we can actually
+    make use of the client.pem key which is distributed to the node at the time of bootstrapping
+    from the chef server,
+    see the required commands to explore later on this,:
+
+    # vagrant ssh web1
+    # ls /etc/chef/
+        This will give is the .pem file which we can use to encrypt the data inside the data bag.
+    # exit
+    # knife vault --help  ==> help us in encryption of data using .pem key

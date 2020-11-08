@@ -1,0 +1,17 @@
+1) A data bag is a container for items that represents information about your infrastructure that is not tied to 
+    a single node 
+    example:
+    =========
+        a) users,
+        b) groups,
+        c) application release information
+        d) passwords inside of a encrypted data bags 
+2) These data bags takes JSON, so anything that you can do with JSON, can be done with data bags also .
+3) So data bags again can be managed in two ways:
+    a) we can create a data bag file on a local wrokstation machine in a data bags directory and then upload it
+        to chef server
+    b) second way of creating and managing the data bag using chef server API's with the custom scripts. We might 
+        want to use this method if want to integrate the LDAP functionality using the RESTful API.
+4) We could also encrypt our data bags with secrets. So we can actually go through and encrypt the data bag
+    item and have each individual node decrypt it using the key.
+    
